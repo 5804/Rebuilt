@@ -10,7 +10,6 @@ public class Indexer extends SubsystemBase {
   public TalonFX indexerMotor;
   public Indexer() {
        indexerMotor = new TalonFX(Constants.IndexerConstants.INDEXER_MOTOR_ID);
-       
   }
 
   public Command runIndexer() {

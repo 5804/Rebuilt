@@ -12,19 +12,18 @@ public final class Constants {
     }
     public final class IndexerConstants {
         public static final int INDEXER_MOTOR_ID = 52;
-        public static final double INDEXER_SPEED = -1;
+        public static final double INDEXER_SPEED = -.3;
         
     }
     public final class ShooterConstants {
-        public static final double INDEXER_SPEED = 1.0;
         public static final int LEFT_SHOOTER_MOTOR_ID = 55;
         public static final int RIGHT_SHOOTER_MOTOR_ID = 56;
-        public static double SHOOTER_SPEED = 1;
+        public static double SHOOTER_SPEED = 47.5; // (Back Right: 61), (Middle: 47.5), (Back Left: 59)
         
     }
     public final class IntakeConstants {
         public static final int INTAKE_MOTOR_ID = 51;
-        public static final double INTAKE_SPEED = -0.45;
+        public static final double INTAKE_SPEED = -0.3;
     }
     public final class DriveConstants {
         public static final double DRIVE_DEADBAND = 0.20;

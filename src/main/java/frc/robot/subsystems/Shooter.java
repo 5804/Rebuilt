@@ -45,11 +45,8 @@ public class Shooter extends SubsystemBase {
 
   public Command runShooter() {
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
-    double bot_dist = 100;
-    double shoot_set = (bot_dist * .68 + 13)/2 + 6;
-
     return run(() -> {
-      leftShooterMotor.setControl(m_request.withVelocity(bot_dist).withFeedForward(.5)); //.5
+      leftShooterMotor.setControl(m_request.withVelocity(Constants.ShooterConstants.SHOOTER_SPEED).withFeedForward(.5)); //.5
     });
   }
 

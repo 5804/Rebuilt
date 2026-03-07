@@ -25,6 +25,7 @@ import frc.robot.commandfactories.ScoringFactory;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
@@ -47,12 +48,13 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public final Turret turret = new Turret();
-    public final Elevator indexer = new Elevator();
+    public final Elevator elevator = new Elevator();
+    public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
     public Shooter shooterSpeed = new Shooter();
     
-    ScoringFactory scoringFactory = new ScoringFactory(shooter, indexer);
+    ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer);
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private ShuffleboardTab tab1 = Shuffleboard.getTab("Tab1");
@@ -85,19 +87,28 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        joystick.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        ));
+        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // joystick.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
+        // ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
   
-        joystick.rightBumper().whileTrue(indexer.runElevator());
-        joystick.rightBumper().onFalse(indexer.stopElevator());
+        joystick.rightBumper().whileTrue(elevator.runElevator());
+        joystick.rightBumper().onFalse(elevator.stopElevator());
        
+        joystick.leftBumper().whileTrue(indexer.runIndexer());
+        joystick.leftBumper().onFalse(indexer.stopIndexer());
+
+        joystick.a().whileTrue(shooter.runShooter());
+        joystick.a().onFalse(shooter.stopShooter());
+
+        joystick.b().whileTrue(intake.reverseIntake());
+        joystick.b().onFalse(intake.stopIntake());
+
         // joystick.rightTrigger().whileTrue(shooter.runShooter());
         // joystick.rightTrigger().whileFalse(shooter.stopShooter());
 
