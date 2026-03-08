@@ -17,6 +17,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
@@ -28,10 +29,11 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -43,9 +45,11 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
+    public String[] limelights = { "limelight-front", "limelight-back" }; //TODO: Move to LimelightHelpers
+
     private final ShuffleboardTab odometryTab = Shuffleboard.getTab("Odometry");
     private final Field2d field = new Field2d();
-    private final SwerveRequest.ApplyRobotSpeeds pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds(); // confirm this
+    private final SwerveRequest.ApplyRobotSpeeds pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -278,13 +282,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public void periodic() {
         field.setRobotPose(this.getState().Pose);
-        /*
-         * Periodically try to apply the operator perspective.
-         * If we haven't applied the operator perspective before, then we should apply it regardless of DS state.
-         * This allows us to correct the perspective in case the robot code restarts mid-match.
-         * Otherwise, only check and apply the operator perspective if the DS is disabled.
-         * This ensures driving behavior doesn't change until an explicit disable event occurs during testing.
-         */
+        
+        SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
+        SmartDashboard.putNumber("Odometry Y", getState().Pose.getY());
+        SmartDashboard.putNumber("Angle", getState().Pose.getRotation().getDegrees());
+
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
                 setOperatorPerspectiveForward(
@@ -294,6 +296,25 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 );
                 m_hasAppliedOperatorPerspective = true;
             });
+        }
+
+        for (String ll : limelights) {
+            LimelightHelpers.SetRobotOrientation(ll, getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            LimelightHelpers.PoseEstimate individualVisionPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
+            
+            boolean rejectUpdate = false;
+            if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)){
+                rejectUpdate = true;
+            }
+            
+            if(individualVisionPoseEstimate.tagCount < 2){
+                rejectUpdate = true;
+            }
+
+            if(!rejectUpdate) {
+                setVisionMeasurementStdDevs(VecBuilder.fill(.1,.15,Math.toRadians(360)));
+                addVisionMeasurement(individualVisionPoseEstimate.pose, individualVisionPoseEstimate.timestampSeconds);
+            }
         }
     }
 

@@ -6,12 +6,16 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Optional;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -22,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commandfactories.ScoringFactory;
+import frc.robot.commandfactories.TurretFactory;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
@@ -35,6 +40,10 @@ public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
+    public boolean turretAutoLock = false;
+
+    static Optional<Alliance> alliance = DriverStation.getAlliance();
+    public static boolean isRedAlliance = alliance.get() == Alliance.Red;
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -46,18 +55,23 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public final Turret turret = new Turret();
+    public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public static final Turret turret = new Turret();
     public final Elevator elevator = new Elevator();
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
     public Shooter shooterSpeed = new Shooter();
     
-    ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer);
+    ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer, drivetrain, isRedAlliance);
+    public static TurretFactory turretFactory = new TurretFactory(drivetrain, turret, isRedAlliance);
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private ShuffleboardTab tab1 = Shuffleboard.getTab("Tab1");
+
+    public Command aimTurretStop() {
+        return Commands.run(() -> { turret.setYaw(0); }, turret);
+    }
 
     public RobotContainer() {
         configureBindings();
@@ -66,6 +80,12 @@ public class RobotContainer {
         autoChooser.addOption("Two Meter Test", TwoMeterTest());
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
+
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-front", 0.305, 0.395, 0.26, 0, 30, 0);
+        LimelightHelpers.setPipelineIndex("limelight-front", 0);
+
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-back", -0.305, -0.305, 0.26, 0, 30, 180);
+        LimelightHelpers.setPipelineIndex("limelight-back", 0);
     }
 
     private void configureBindings() {
@@ -118,8 +138,9 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
         joystick.leftTrigger().whileTrue(intake.runIntake());
         joystick.leftTrigger().whileFalse(intake.stopIntake());
-        joystick.povUp().onTrue(shooter.increaseShooterSpeed());
-        joystick.povDown().onTrue(shooter.decreaseShooterSpeed());
+ 
+        joystick.povUp().onTrue(turretFactory.aimTurretHub());
+        joystick.povDown().onTrue(aimTurretStop());
     }
     
     public Command getAutonomousCommand() {
