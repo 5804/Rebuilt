@@ -159,6 +159,9 @@ public class RobotContainer {
         joystick.povUp().onTrue(turret.aimTurret());
         joystick.povDown().onTrue(aimTurretStop());
 
+        joystick.y().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED += 0.2; } ));
+        joystick.x().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= 0.2; } ));
+
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 

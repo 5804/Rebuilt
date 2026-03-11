@@ -11,9 +11,6 @@ public class TurretMath {
     public double targetX;
     public double targetZ = 1.75;
 
-    double[][] redZones = { { 11.915394, 4.034663, 1.75 }, { 3.0, 6.0, 0 }, { 3.0, 2.0, 0 } };
-    double[][] blueZones = { { 4.625594, 4.034663, 1.75 }, { 13.5, 6.0, 0 }, { 13.5, 2.0, 0 } };
-
     // Hub Height = 1.75 Meters
 
     // Shooter offset from robot center (meters)
@@ -48,7 +45,7 @@ public class TurretMath {
     }
 
     private double dragCorrection(double distance) {
-        return 1; // FIGURE OUT DRAG CORRECTION BASED ON TESTING
+        return distance/10; // FIGURE OUT DRAG CORRECTION BASED ON TESTING
     }
 
     public void calculateTurretMath(
@@ -98,18 +95,15 @@ public class TurretMath {
         turretRPS = exitVelocityToRPS(actualExitVelocity * dragCorrection(actualDistance));
     }
 
+    double[][] redZones = { { 11.915394, 4.034663, 1.75 }, { 13.5, 6.0, 0 }, { 13.5, 2.0, 0 } };
+    double[][] blueZones = { { 4.625594, 4.034663, 1.75 }, { 3.0, 2.0, 0 }, { 3.0, 6.0, 0 } };
     public void calculateTarget(boolean isRedAlliance, CommandSwerveDrivetrain drivetrain) {
         double[][] zones = isRedAlliance ? redZones : blueZones;
         double x = drivetrain.getState().Pose.getX();
         double y = drivetrain.getState().Pose.getY();
 
         int zoneIndex;
-        if (x > 12.0)
-            zoneIndex = 0;
-        else if (y >= 4)
-            zoneIndex = isRedAlliance ? 1 : 2;
-        else
-            zoneIndex = isRedAlliance ? 2 : 1;
+        if (isRedAlliance && x > 12.0 || !isRedAlliance && x < 4.6) zoneIndex = 0; else if (y >= 4) zoneIndex = isRedAlliance ? 1 : 2; else zoneIndex = isRedAlliance ? 2 : 1;
 
         targetX = zones[zoneIndex][0];
         targetY = zones[zoneIndex][1];

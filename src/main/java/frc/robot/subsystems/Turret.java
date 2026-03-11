@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.TurretMath;
@@ -74,8 +78,17 @@ public class Turret extends SubsystemBase {
     });
   }
 
+    double[] hubPos = { 4.625594, 4.034663 };
   @Override
   public void periodic() {
+    Pose2d robotPose = drivetrain.getState().Pose;
+    Pose2d turretPose = robotPose.transformBy(
+      new Transform2d(
+      new Translation2d(-.25, 0),
+      new Rotation2d()
+    ));
+
+    SmartDashboard.putNumber("Dist from Hub", Math.sqrt(Math.pow((turretPose.getX() - hubPos[0]), 2) + Math.pow((turretPose.getY() - hubPos[1]), 2)));
     turretMath.calculateTurretMath(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(),
         drivetrain.getState().Pose.getRotation().getRadians(),
         drivetrain.getState().Speeds.vxMetersPerSecond, drivetrain.getState().Speeds.vyMetersPerSecond);
