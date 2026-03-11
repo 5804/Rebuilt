@@ -7,6 +7,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -22,11 +23,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.commandfactories.ScoringFactory;
-import frc.robot.commandfactories.TurretFactory;
+import frc.robot.TurretMath;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
@@ -35,10 +39,11 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
-
 public class RobotContainer {
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
+                                                                                        // speed
+    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
+                                                                                      // max angular velocity
 
     public boolean turretAutoLock = false;
 
@@ -56,28 +61,52 @@ public class RobotContainer {
     private final CommandXboxController joystick = new CommandXboxController(0);
 
     public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    public static final Turret turret = new Turret();
+    public static TurretMath turretMath = new TurretMath();
+    public static final Turret turret = new Turret(drivetrain, turretMath, isRedAlliance);
     public final Elevator elevator = new Elevator();
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
     public Shooter shooterSpeed = new Shooter();
-    
-    ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer, drivetrain, isRedAlliance);
-    public static TurretFactory turretFactory = new TurretFactory(drivetrain, turret, isRedAlliance);
+
+    ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer, drivetrain, isRedAlliance,
+            turretMath);
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private ShuffleboardTab tab1 = Shuffleboard.getTab("Tab1");
 
     public Command aimTurretStop() {
-        return Commands.run(() -> { turret.setYaw(0); }, turret);
+        return Commands.run(() -> {
+            turret.setYaw(0);
+        }, turret);
     }
 
     public RobotContainer() {
         configureBindings();
-        // NamedCommands.registerCommand("Name", oneMeterAuto());
-        // autoChooser.setDefaultOption("Default Auto", TwoMeterTest());
+        NamedCommands.registerCommand("AimTurret", turret.aimTurret());
+
+        NamedCommands.registerCommand("ScoreFor3.5", new ParallelCommandGroup(
+                turret.aimTurret(),
+                scoringFactory.runShooter()).withTimeout(3.5)
+                .andThen(new InstantCommand(() -> {
+                    shooter.leftShooterMotor.set(0);
+                    elevator.elevatorMotor.set(0);
+                    indexer.indexerMotor.set(0);
+                })));
+
+        NamedCommands.registerCommand("StopTurretAim", aimTurretStop());
+        NamedCommands.registerCommand("RunIntake", intake.runIntake().repeatedly());
+        NamedCommands.registerCommand("StopIntake", intake.stopIntake());
+        NamedCommands.registerCommand("Shoot", scoringFactory.runShooter().repeatedly());
+        NamedCommands.registerCommand("StopShoot", scoringFactory.stopShooter());
+
         autoChooser.addOption("Two Meter Test", TwoMeterTest());
+        autoChooser.addOption("90 Degree Rotation Test", RotationTest());
+        autoChooser.addOption("Left Side Auto", LeftSideAuto());
+        autoChooser.addOption("Right Side Auto", RightSideAuto());
+        autoChooser.addOption("Right Middle Auto", RightMiddleAuto());
+        autoChooser.addOption("Right Middle U-Auto", RightMiddleUAuto());
+
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
 
@@ -92,62 +121,58 @@ public class RobotContainer {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
+                // Drivetrain will execute this command periodically
+                drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+                                                                                                   // negative Y
+                                                                                                   // (forward)
+                        .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
+                                                                                    // negative X (left)
+                ));
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
         RobotModeTriggers.disabled().whileTrue(
-            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
-        );
+                drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
-        // joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // joystick.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-joystick.getLeftY(), -joystick.getLeftX()))
-        // ));
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-  
         joystick.rightBumper().whileTrue(elevator.runElevator());
         joystick.rightBumper().onFalse(elevator.stopElevator());
-       
+
         joystick.leftBumper().whileTrue(indexer.runIndexer());
         joystick.leftBumper().onFalse(indexer.stopIndexer());
 
         joystick.a().whileTrue(shooter.runShooter());
         joystick.a().onFalse(shooter.stopShooter());
 
-        joystick.b().whileTrue(intake.reverseIntake());
-        joystick.b().onFalse(intake.stopIntake());
-
-        // joystick.rightTrigger().whileTrue(shooter.runShooter());
-        // joystick.rightTrigger().whileFalse(shooter.stopShooter());
+        joystick.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
+        joystick.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
         joystick.rightTrigger().whileTrue(scoringFactory.runShooter());
         joystick.rightTrigger().onFalse(scoringFactory.stopShooter());
 
-        drivetrain.registerTelemetry(logger::telemeterize);
         joystick.leftTrigger().whileTrue(intake.runIntake());
         joystick.leftTrigger().whileFalse(intake.stopIntake());
- 
-        joystick.povUp().onTrue(turretFactory.aimTurretHub());
+
+        joystick.povUp().onTrue(turret.aimTurret());
         joystick.povDown().onTrue(aimTurretStop());
-    }
-    
-    public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
-    public Command TwoMeterTest() {
-        return new PathPlannerAuto("2MeterTest");
-    }
+    public Command getAutonomousCommand() { return autoChooser.getSelected(); }
+
+    public Command LeftSideAuto() { return new PathPlannerAuto("Left Side Auto"); }
+
+    public Command RightSideAuto() { return new PathPlannerAuto("Right Side Auto"); }
+
+    public Command RightMiddleAuto() { return new PathPlannerAuto("Right Middle Auto"); }
+
+    public Command RightMiddleUAuto() { return new PathPlannerAuto("Right Middle U-Auto"); }
+
+    public Command TwoMeterTest() { return new PathPlannerAuto("2MeterTest"); }
+
+    public Command RotationTest() { return new PathPlannerAuto("90DegreeTest"); }
 }

@@ -12,18 +12,18 @@ public final class Constants {
     }
     public final class IndexerConstants {
         public static final int INDEXER_MOTOR_ID = 52;
-        public static final double INDEXER_SPEED = -.3;
+        public static final double INDEXER_SPEED = -.25; // If going faster than .3, make sure wheels don't break robot
         
     }
     public final class ShooterConstants {
         public static final int LEFT_SHOOTER_MOTOR_ID = 55;
         public static final int RIGHT_SHOOTER_MOTOR_ID = 56;
-        public static double SHOOTER_SPEED = 60; // (Back Right: 61), (Middle: 47.5), (Back Left: 58.5)
-        
+        public static double SHOOTER_SPEED = 60;
+        public static double SHOOTER_WHEEL_DIAMETER = 4.0;
     }
     public final class IntakeConstants {
         public static final int INTAKE_MOTOR_ID = 51;
-        public static final double INTAKE_SPEED = 0.3;
+        public static final double INTAKE_SPEED = 0.2;
     }
     public final class TurretConstants {
         public static final int TURRET_MOTOR_ID = 54;

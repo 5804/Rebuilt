@@ -4,18 +4,15 @@ import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
 import java.util.function.Supplier;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,6 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -233,10 +231,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 ),
                 new PPHolonomicDriveController(
                     // PID constants for translation
-                    new PIDConstants(1, 0, 0), // kP: 20 // Current Happy values: kP: .9,1.63 // kP: 20
+                    new PIDConstants(5, 0, 0), // kP: 20 // Current Happy values: kP: .9,1.63 // kP: 20
                     // *** Decrease kP between 20-25 ***
                     // PID constants for rotation
-                    new PIDConstants(1, 0, 0) // kP: 15.975
+                    new PIDConstants(8, 0, 0) // kP: 15.975
                 ),
                 config,
                 // Assume the path needs to be flipped for Red vs Blue, this is normally the case
@@ -278,7 +276,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return m_sysIdRoutineToApply.dynamic(direction);
     }
-
+double maxVel = 0;
     @Override
     public void periodic() {
         field.setRobotPose(this.getState().Pose);
@@ -286,6 +284,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
         SmartDashboard.putNumber("Odometry Y", getState().Pose.getY());
         SmartDashboard.putNumber("Angle", getState().Pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("VX", getState().Speeds.vxMetersPerSecond);
+      SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
+        SmartDashboard.putNumber("Shooter Velocity (RPS)", Constants.ShooterConstants.SHOOTER_SPEED);
+        if (maxVel < Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2))))
+            maxVel = Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2)));
+        SmartDashboard.putNumber("Max Veocity", maxVel);
 
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
