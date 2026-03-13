@@ -7,8 +7,8 @@ public class TurretMath {
     public static double turretAngle = 0; // Degrees
     public static double turretRPS = 0; // Revolutions per second
 
-    public double targetY = 4.034663;
     public double targetX;
+    public double targetY = 4.034663;
     public double targetZ = 1.75;
 
     // Hub Height = 1.75 Meters
@@ -86,15 +86,15 @@ public class TurretMath {
 
         double actualDistance = Math.sqrt(Math.pow(shooter_x - new_targetX, 2) + Math.pow(shooter_y - new_targetY, 2));
 
-        double hubDz = 1.75 - OFFSET_Z;
+        double hubDz = 2 - OFFSET_Z;
         turretAngle = Math.toDegrees(Math.atan2(new_targetY - shooter_y, new_targetX - shooter_x));
         turretRPS = distanceToRPS(actualDistance) *
                 (distanceToExitVelocity(actualDistance, dz) /
                         distanceToExitVelocity(actualDistance, hubDz));
     }
 
-    double[][] redZones = { { 11.665394, 3.8, 1.75 }, { 13.5/* 15.0 */, 6.0, 0 }, { 13.5/* 15.0 */, 2.0, 0 } };
-    double[][] blueZones = { { 4.875594, 3.8, 1.75 }, { 3/* 1.5 */, 2.0, 0 }, { 3/* 1.5 */, 6.0, 0 } };
+    double[][] redZones = { { 11.665394, 3.8, 1.75 }, { 15.4/* 15.0 */, 6.5, 0 }, { 15.4/* 15.0 */, 1.7, 0 } };
+    double[][] blueZones = { { 4.875594, 3.8, 1.75 }, { 1.1/* 1.5 */, 1.7, 0 }, { 1.1/* 1.5 */, 6.5, 0 } };
 
     public void calculateTarget(boolean isRedAlliance, CommandSwerveDrivetrain drivetrain) {
         double[][] zones = isRedAlliance ? redZones : blueZones;

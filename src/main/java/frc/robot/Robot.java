@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
         if (m_autonomousCommand != null) {
             CommandScheduler.getInstance().cancel(m_autonomousCommand);
         }
+        RobotContainer.turret.aimTurret(); //Sorry Taylor :(
     }
 
     @Override
@@ -69,9 +70,7 @@ public class Robot extends TimedRobot {
     public void teleopExit() {}
 
     @Override
-    public void testInit() {
-        CommandScheduler.getInstance().cancelAll();
-    }
+    public void testInit() { CommandScheduler.getInstance().cancelAll(); }
 
     @Override
     public void testPeriodic() {}

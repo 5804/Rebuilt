@@ -3,15 +3,14 @@
   "robotLength": 0.862,
   "holonomicMode": true,
   "pathFolders": [
-    "Left Middle Auto",
-    "Left Side Auto",
-    "Better Auto New New New",
-    "Right Middle Auto",
-    "Right Side Auto",
+    "Cross Bump",
+    "Pickup Ball",
+    "Shoot",
     "Testing Paths"
   ],
   "autoFolders": [
-    "Official Autos",
+    "Left Autos",
+    "Right Autos",
     "Testing Paths"
   ],
   "defaultMaxVel": 3.0,

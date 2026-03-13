@@ -8,7 +8,10 @@ import frc.robot.Constants;
 public class Elevator extends SubsystemBase {
   public TalonFX elevatorMotor;
 
-  public Elevator() { elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID); }
+  public Elevator() { 
+    elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID); 
+  
+  }
 
   public Command runElevator() { return run(() -> { elevatorMotor.set(Constants.ElevatorConstants.ELEVATOR_SPEED); }); }
 

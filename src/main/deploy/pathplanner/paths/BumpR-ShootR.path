@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5,
-        "y": 2.5
+        "x": 5.920045454545455,
+        "y": 2.519897727272728
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5,
-        "y": 2.5
+        "x": 4.768159720567462,
+        "y": 2.5036725660106396
       },
       "isLocked": false,
-      "linkedName": "RMFirstPathEnd"
+      "linkedName": "BumpR"
     },
     {
       "anchor": {
-        "x": 6.387853309481216,
-        "y": 2.5
+        "x": 1.893416815742397,
+        "y": 2.3881216457960637
       },
       "prevControl": {
-        "x": 5.387853309481216,
-        "y": 2.5
+        "x": 2.3164815802309078,
+        "y": 2.3940808254487433
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RMSecondPathEnd"
+      "linkedName": "ShootR"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 45.0
+    "rotation": -137.42
   },
   "reversed": false,
-  "folder": "Right Middle Auto",
+  "folder": "Cross Bump",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 45.0
+    "velocity": 2.0,
+    "rotation": -137.42
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

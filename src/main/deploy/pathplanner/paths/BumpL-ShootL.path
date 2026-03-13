@@ -3,55 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.353703041144901,
-        "y": 2.3718962432915918
+        "x": 5.920045454545455,
+        "y": 5.581022727272727
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.786056818181818,
-        "y": 2.5817386363636365
+        "x": 5.043965909090908,
+        "y": 5.581022727272727
       },
       "isLocked": false,
-      "linkedName": "RMJShootFinish"
+      "linkedName": "BumpL"
     },
     {
       "anchor": {
-        "x": 7.373306818181818,
-        "y": 1.2624659090909096
+        "x": 1.5,
+        "y": 5.56958
       },
       "prevControl": {
-        "x": 7.305441776926366,
-        "y": 1.021853490094309
-      },
-      "nextControl": {
-        "x": 7.940181818181818,
-        "y": 3.2722954545454543
-      },
-      "isLocked": false,
-      "linkedName": "RMJBumpToBalls"
-    },
-    {
-      "anchor": {
-        "x": 7.610363636363637,
-        "y": 5.6325568181818175
-      },
-      "prevControl": {
-        "x": 7.950488636363637,
-        "y": 3.7154886363636352
+        "x": 2.60125,
+        "y": 5.560409090909091
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RMJBallPickUpMid"
+      "linkedName": "ShootL"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.0708117443868739,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 0.4,
+      "maxWaypointRelativePos": 0.35,
       "constraints": {
-        "maxVelocity": 3.5,
+        "maxVelocity": 3.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -72,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 100.0
+    "rotation": 41.082
   },
   "reversed": false,
-  "folder": "Better Auto New New New",
+  "folder": "Cross Bump",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 55.0
+    "velocity": 1.5,
+    "rotation": 41.082
   },
   "useDefaultConstraints": false
 }

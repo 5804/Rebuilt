@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RMFirstPath"
+            "pathName": "StartM-ShootL"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RMSecondPath"
+            "pathName": "ShootL-BumpL"
           }
         },
         {
@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RMThirdPathNew"
+                  "pathName": "BumpL-PickupL-BumpL"
                 }
               },
               {
@@ -42,21 +42,21 @@
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "StopIntake"
+            "pathName": "BumpL-ShootL"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ScoreFor3.5"
+            "name": "Shoot"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Official Autos",
+  "folder": "Left Autos",
   "choreoAuto": false
 }

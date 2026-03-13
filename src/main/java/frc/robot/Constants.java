@@ -8,12 +8,11 @@ public final class Constants {
     public final class ElevatorConstants {
         public static final int ELEVATOR_MOTOR_ID = 53;
         public static final double ELEVATOR_SPEED = -1;
-        
     }
     public final class IndexerConstants {
         public static final int INDEXER_MOTOR_ID = 52;
         public static final double INDEXER_SPEED = -.3; // If going faster than .3, make sure wheels don't break robot
-        
+        public static final double REVERSE_INDEXER_SPEED = -INDEXER_SPEED;
     }
     public final class ShooterConstants {
         public static final int LEFT_SHOOTER_MOTOR_ID = 55;
@@ -24,6 +23,7 @@ public final class Constants {
     public final class IntakeConstants {
         public static final int INTAKE_MOTOR_ID = 51;
         public static final double INTAKE_SPEED = 0.5;
+        public static final double REVERSE_INTAKE_SPEED = 0.75;
     }
     public final class TurretConstants {
         public static final int TURRET_MOTOR_ID = 54;

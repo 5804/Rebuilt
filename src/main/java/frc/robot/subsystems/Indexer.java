@@ -12,7 +12,7 @@ public class Indexer extends SubsystemBase {
 
   public Command runIndexer() { return run(() -> { indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED); }); }
 
-  public Command reverseIndexer() { return run(() -> { indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED); }); }
+  public Command reverseIndexer() { return run(() -> { indexerMotor.set(Constants.IndexerConstants.REVERSE_INDEXER_SPEED); }); }
 
   public Command stopIndexer() { return run(() -> { indexerMotor.set(0); }); }
 }

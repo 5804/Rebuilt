@@ -78,6 +78,8 @@ public class Turret extends SubsystemBase {
     });
   }
 
+  public Command zeroTurret() { return runOnce(() -> { yawMotor.setPosition(0); }); }
+
     double[] hubPos = { 4.625594, 4.034663 };
   @Override
   public void periodic() {
@@ -89,7 +91,7 @@ public class Turret extends SubsystemBase {
     ));
 
     SmartDashboard.putNumber("Dist from Hub", Math.sqrt(Math.pow((turretPose.getX() - hubPos[0]), 2) + Math.pow((turretPose.getY() - hubPos[1]), 2)));
-    turretMath.calculateTurretMath(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(),
+    turretMath.calculate3DTurretMath(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(),
         drivetrain.getState().Pose.getRotation().getRadians(),
         drivetrain.getState().Speeds.vxMetersPerSecond, drivetrain.getState().Speeds.vyMetersPerSecond);
   }

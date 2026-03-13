@@ -11,7 +11,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "LeftFirstPath"
+                  "pathName": "StartL-Depot"
                 }
               },
               {
@@ -62,7 +62,7 @@
                           {
                             "type": "path",
                             "data": {
-                              "pathName": "LeftSecondPath"
+                              "pathName": "CrossDepot"
                             }
                           }
                         ]
@@ -78,6 +78,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Official Autos",
+  "folder": "Left Autos",
   "choreoAuto": false
 }
