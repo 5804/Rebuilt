@@ -115,12 +115,13 @@ public class RobotContainer {
         autoChooser.addOption("Two Meter Test", TwoMeterTest());
         autoChooser.addOption("90 Degree Rotation Test", RotationTest());
         autoChooser.addOption("Left Side Auto", LeftSideAuto());
+        autoChooser.addOption("Left Middle Auto", LeftMiddleAuto());
+        autoChooser.addOption("Left Middle U-Auto", LeftUMiddleAuto());
+        autoChooser.addOption("Left Middle Pass Auto", LeftPassMiddleAuto());
         autoChooser.addOption("Right Side Auto", RightSideAuto());
         autoChooser.addOption("Right Middle Auto", RightMiddleAuto());
-        autoChooser.addOption("Right Middle U-Auto", RightMiddleUAuto());
+        autoChooser.addOption("Right Middle U-Auto", RightUMiddleAuto());
         autoChooser.addOption("Right Middle Pass Auto", RightPassMiddleAuto());
-        autoChooser.addOption("RMJ", RMJAuto());
-
 
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
@@ -189,19 +190,14 @@ public class RobotContainer {
     public Command getAutonomousCommand() { return autoChooser.getSelected(); }
 
     public Command LeftSideAuto() { return new PathPlannerAuto("Left Side Auto"); }
-
+    public Command LeftMiddleAuto() { return new PathPlannerAuto("Left Middle Auto"); }
+    public Command LeftUMiddleAuto() { return new PathPlannerAuto("Left-U Middle Auto"); }
+    public Command LeftPassMiddleAuto() { return new PathPlannerAuto("Left Middle Passing Auto"); }
     public Command RightSideAuto() { return new PathPlannerAuto("Right Side Auto"); }
-
     public Command RightMiddleAuto() { return new PathPlannerAuto("Right Middle Auto"); }
-
-    public Command RightMiddleUAuto() { return new PathPlannerAuto("Right Middle U-Auto"); }
-
+    public Command RightUMiddleAuto() { return new PathPlannerAuto("Right-U Middle Auto"); }
     public Command RightPassMiddleAuto() { return new PathPlannerAuto("Right Middle Passing Auto"); }
-
     public Command TwoMeterTest() { return new PathPlannerAuto("2MeterTest"); }
-
     public Command RotationTest() { return new PathPlannerAuto("90DegreeTest"); }
-
-    public Command RMJAuto() { return new PathPlannerAuto("RMJ"); }
 
 }
