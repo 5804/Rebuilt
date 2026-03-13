@@ -34,7 +34,8 @@ public class ScoringFactory {
   public Command runShooter() {
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
     return Commands.run(() -> {
-      double rps = turretMath.turretRPS; // Constants.ShooterConstants.SHOOTER_SPEED;
+      // double rps = Constants.ShooterConstants.SHOOTER_SPEED; // turretMath.turretRPS
+      double rps = turretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5)); // .5
       if (shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) { // 97

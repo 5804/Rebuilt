@@ -12,7 +12,7 @@ public class Intake extends SubsystemBase {
 
   public Command runIntake() { return run(() -> { intakeMotor.set(Constants.IntakeConstants.INTAKE_SPEED); }); }
 
-  public Command reverseIntake() { return run(() -> { intakeMotor.set(-Constants.IntakeConstants.INTAKE_SPEED * 1.5); }); }
+  public Command reverseIntake() { return run(() -> { intakeMotor.set(Constants.IntakeConstants.REVERSE_INTAKE_SPEED); }); }
 
-  public Command stopIntake() { return run(() -> { intakeMotor.set(0); }); }
+  public Command stopIntake() { return runOnce(() -> { intakeMotor.set(0); }); }
 }

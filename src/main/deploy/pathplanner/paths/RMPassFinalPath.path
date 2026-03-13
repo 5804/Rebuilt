@@ -1,0 +1,70 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.2580500894454385,
+        "y": 0.6520035778175304
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.104210628101087,
+        "y": 1.6639901247576379
+      },
+      "isLocked": false,
+      "linkedName": "RMPassEnd"
+    },
+    {
+      "anchor": {
+        "x": 7.55608228980322,
+        "y": 1.8364579606440063
+      },
+      "prevControl": {
+        "x": 7.188120162541768,
+        "y": 1.3818193768774336
+      },
+      "nextControl": {
+        "x": 7.77573118681562,
+        "y": 2.107846932674415
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.55608228980322,
+        "y": 3.150715563506261
+      },
+      "prevControl": {
+        "x": 7.505878623607263,
+        "y": 2.905808250629563
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 86.42366562500273
+  },
+  "reversed": false,
+  "folder": "Right Middle Auto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

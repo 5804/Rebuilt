@@ -97,7 +97,15 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopTurretAim", aimTurretStop());
         NamedCommands.registerCommand("RunIntake", intake.runIntake().repeatedly());
         NamedCommands.registerCommand("StopIntake", intake.stopIntake());
+        NamedCommands.registerCommand("ReverseIntake", new ParallelCommandGroup(
+            intake.reverseIntake(), indexer.reverseIndexer()).withTimeout(1)
+            .andThen(new InstantCommand(() -> {
+                intake.intakeMotor.set(0);
+                indexer.indexerMotor.set(0);
+            }))
+            );
         NamedCommands.registerCommand("Shoot", scoringFactory.runShooter().repeatedly());
+        NamedCommands.registerCommand("ShootWithTimeout", scoringFactory.runShooter().withTimeout(5));
         NamedCommands.registerCommand("StopShoot", scoringFactory.stopShooter());
 
         autoChooser.addOption("Two Meter Test", TwoMeterTest());
@@ -106,14 +114,17 @@ public class RobotContainer {
         autoChooser.addOption("Right Side Auto", RightSideAuto());
         autoChooser.addOption("Right Middle Auto", RightMiddleAuto());
         autoChooser.addOption("Right Middle U-Auto", RightMiddleUAuto());
+        autoChooser.addOption("Right Middle Pass Auto", RightPassMiddleAuto());
+        autoChooser.addOption("RMJ", RMJAuto());
+
 
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
 
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-front", 0.305, 0.395, 0.26, 0, 30, 0);
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-front", 0.28, 0.28, 0.26, 0, 30, 0);
         LimelightHelpers.setPipelineIndex("limelight-front", 0);
 
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-back", -0.305, -0.305, 0.26, 0, 30, 180);
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-back", -0.28, -0.28, 0.26, 0, 30, 180);
         LimelightHelpers.setPipelineIndex("limelight-back", 0);
     }
 
@@ -175,7 +186,12 @@ public class RobotContainer {
 
     public Command RightMiddleUAuto() { return new PathPlannerAuto("Right Middle U-Auto"); }
 
+    public Command RightPassMiddleAuto() { return new PathPlannerAuto("Right Middle Passing Auto"); }
+
     public Command TwoMeterTest() { return new PathPlannerAuto("2MeterTest"); }
 
     public Command RotationTest() { return new PathPlannerAuto("90DegreeTest"); }
+
+    public Command RMJAuto() { return new PathPlannerAuto("RMJ"); }
+
 }

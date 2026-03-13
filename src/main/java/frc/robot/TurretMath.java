@@ -4,8 +4,8 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class TurretMath {
 
-    public double turretAngle = 0; // Degrees
-    public double turretRPS = 0; // Revolutions per second
+    public static double turretAngle = 0; // Degrees
+    public static double turretRPS = 0; // Revolutions per second
 
     public double targetY = 4.034663;
     public double targetX;
@@ -18,34 +18,31 @@ public class TurretMath {
     private static final double OFFSET_Y = -0.25;
     private static final double OFFSET_Z = 0.7112;
 
-    private static final double LAUNCH_ANGLE = Math.toRadians(30.0);
+    private static final double LAUNCH_ANGLE = Math.toRadians(15.0);
     private static final double COS_ANGLE = Math.cos(LAUNCH_ANGLE);
     private static final double TAN_ANGLE = Math.tan(LAUNCH_ANGLE);
 
-    private static final double WHEEL_DIAMETER = 0.1016;
-    private static final double GEAR_RATIO = 1.0;
+    // 30 Degree Hood
+    // private double distanceToAirtime(double distance) {
+    // return 0.128428 * distance + 0.453662;
+    // }
+    // private double distanceToRPS(double distance) {
+    // return 3.89912 * distance + 35.10389;
+    // }
 
     private double distanceToAirtime(double distance) {
-        return 0.157202 * distance + 0.523216;
+        return 0.128428 * distance + 0.453662;
     }
 
     private double distanceToRPS(double distance) {
-        return 0.399341 * Math.pow(distance, 2) + 1.63185 * distance + 38.60187;
+        return 3.89912 * distance + 35.10389;
     }
 
     private double distanceToExitVelocity(double distance, double dz) {
         double denominator = 2 * Math.pow(COS_ANGLE, 2) * (distance * TAN_ANGLE - dz);
         if (denominator <= 0)
-            return 0;
+            return Double.NaN;
         return Math.sqrt((9.81 * Math.pow(distance, 2)) / denominator);
-    }
-
-    private double exitVelocityToRPS(double exitVelocity) {
-        return exitVelocity / (Math.PI * WHEEL_DIAMETER * GEAR_RATIO);
-    }
-
-    private double dragCorrection(double distance) {
-        return distance/10; // FIGURE OUT DRAG CORRECTION BASED ON TESTING
     }
 
     public void calculateTurretMath(
@@ -82,28 +79,35 @@ public class TurretMath {
 
         double dz = targetZ - OFFSET_Z;
         double distance = Math.sqrt(Math.pow(shooter_x - targetX, 2) + Math.pow(shooter_y - targetY, 2));
-        double exitVelocity = distanceToExitVelocity(distance, dz);
-        double airtime = distance / (exitVelocity * COS_ANGLE);
+        double airtime = distanceToAirtime(distance);
 
         double new_targetX = targetX - fieldVel_x * airtime;
         double new_targetY = targetY - fieldVel_y * airtime;
 
         double actualDistance = Math.sqrt(Math.pow(shooter_x - new_targetX, 2) + Math.pow(shooter_y - new_targetY, 2));
-        double actualExitVelocity = distanceToExitVelocity(actualDistance, dz);
 
+        double hubDz = 1.75 - OFFSET_Z;
         turretAngle = Math.toDegrees(Math.atan2(new_targetY - shooter_y, new_targetX - shooter_x));
-        turretRPS = exitVelocityToRPS(actualExitVelocity * dragCorrection(actualDistance));
+        turretRPS = distanceToRPS(actualDistance) *
+                (distanceToExitVelocity(actualDistance, dz) /
+                        distanceToExitVelocity(actualDistance, hubDz));
     }
 
-    double[][] redZones = { { 11.915394, 4.034663, 1.75 }, { 13.5, 6.0, 0 }, { 13.5, 2.0, 0 } };
-    double[][] blueZones = { { 4.625594, 4.034663, 1.75 }, { 3.0, 2.0, 0 }, { 3.0, 6.0, 0 } };
+    double[][] redZones = { { 11.665394, 3.8, 1.75 }, { 13.5/* 15.0 */, 6.0, 0 }, { 13.5/* 15.0 */, 2.0, 0 } };
+    double[][] blueZones = { { 4.875594, 3.8, 1.75 }, { 3/* 1.5 */, 2.0, 0 }, { 3/* 1.5 */, 6.0, 0 } };
+
     public void calculateTarget(boolean isRedAlliance, CommandSwerveDrivetrain drivetrain) {
         double[][] zones = isRedAlliance ? redZones : blueZones;
         double x = drivetrain.getState().Pose.getX();
         double y = drivetrain.getState().Pose.getY();
 
         int zoneIndex;
-        if (isRedAlliance && x > 12.0 || !isRedAlliance && x < 4.6) zoneIndex = 0; else if (y >= 4) zoneIndex = isRedAlliance ? 1 : 2; else zoneIndex = isRedAlliance ? 2 : 1;
+        if (isRedAlliance && x > 12.0 || !isRedAlliance && x < 4.6)
+            zoneIndex = 0;
+        else if (y >= 4)
+            zoneIndex = isRedAlliance ? 1 : 2;
+        else
+            zoneIndex = isRedAlliance ? 2 : 1;
 
         targetX = zones[zoneIndex][0];
         targetY = zones[zoneIndex][1];

@@ -37,8 +37,8 @@ public class Turret extends SubsystemBase {
 
     slot0Configs.kP = 10;
     slot0Configs.kI = 0;
-    slot0Configs.kD = 0.2;
-    slot0Configs.kS = 0.2;
+    slot0Configs.kD = 0.35;
+    slot0Configs.kS = 0.0;
     slot0Configs.kV = 0.117 / (2 * Math.PI);
     slot0Configs.kA = 0;
 
