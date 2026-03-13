@@ -168,8 +168,8 @@ public class RobotContainer {
         xKeys.getButton(14).onTrue(turret.aimTurret());
         xKeys.getButton(15).onTrue(aimTurretStop());
 
-        xKeys.getButton(2).whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
-        xKeys.getButton(2).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
+        xKeys.getButton(19).whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
+        xKeys.getButton(19).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
         xKeys.getButton(21).onTrue(new InstantCommand(() -> {CommandScheduler.getInstance().cancelAll();}));
 
@@ -181,6 +181,9 @@ public class RobotContainer {
 
         xKeys.getButton(1).whileTrue(shooter.runShooter());
         xKeys.getButton(1).onFalse(shooter.stopShooter());
+
+        xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());
+        xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
         // joystick.y().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED += 0.2; } ));
         // joystick.x().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= 0.2; } ));
 

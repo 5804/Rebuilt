@@ -52,11 +52,24 @@ public class ScoringFactory {
     }, shooter, elevator, indexer, intake);
   }
 
+  public Command reverseSystem() {
+    final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
+    return Commands.run(() -> {
+      double rps = -50;
+      SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
+      shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
+      elevator.elevatorMotor.set(-rps / 100);
+      indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
+      intake.intakeMotor.set(-Constants.IntakeConstants.INTAKE_SPEED);
+    }, shooter, elevator, indexer, intake);
+  }
+
   public Command stopShooter() {
     return Commands.run(() -> {
       shooter.leftShooterMotor.set(0);
       elevator.elevatorMotor.set(0);
       indexer.indexerMotor.set(0);
-    }, shooter, elevator, indexer);
+      intake.intakeMotor.set(0);
+    }, shooter, elevator, indexer, intake);
   }
 }
