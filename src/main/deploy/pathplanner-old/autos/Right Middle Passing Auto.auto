@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RMFirstPath"
+            "pathName": "StartM-ShootR"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RMSecondPath"
+            "pathName": "ShootR-BumpR"
           }
         },
         {
@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RMThirdPath"
+                  "pathName": "BumpR-PickupR-BumpR"
                 }
               },
               {
@@ -42,27 +42,40 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "RMFourthPath"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RMFifthPath"
+            "name": "StopIntake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ReverseIntake"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "BumpR-PassR"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Official Autos",
+  "folder": "Right Autos",
   "choreoAuto": false
 }

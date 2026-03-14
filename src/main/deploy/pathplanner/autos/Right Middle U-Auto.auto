@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RMThirdPath"
+                  "pathName": "RMThirdPathNew"
                 }
               },
               {
@@ -42,21 +42,15 @@
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "RMFourthPath"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RMFifthPath"
+            "name": "StopIntake"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ScoreFor3.5"
           }
         }
       ]

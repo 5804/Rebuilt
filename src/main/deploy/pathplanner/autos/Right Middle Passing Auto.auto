@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartM-ShootR"
+            "pathName": "RMFirstPath"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ShootR-BumpR"
+            "pathName": "RMSecondPath"
           }
         },
         {
@@ -29,7 +29,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "BumpR-PickupR-BumpR"
+                  "pathName": "RMThirdPathPass"
                 }
               },
               {
@@ -60,7 +60,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "BumpR-PassR"
+                  "pathName": "RMPassFinalPath"
                 }
               },
               {
@@ -76,6 +76,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Right Autos",
+  "folder": "Official Autos",
   "choreoAuto": false
 }
