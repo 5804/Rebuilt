@@ -37,13 +37,14 @@ public class ScoringFactory {
       double rps = turretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5)); // .5
-      if (shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) { // 97
-        elevator.elevatorMotor.set(-rps / 100);
-        indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
-      } else {
-        elevator.elevatorMotor.set(0);
-        indexer.indexerMotor.set(0);
-      }
+      // if (shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps *
+      // 0.03)) { // 97
+      elevator.elevatorMotor.set(-rps / 100);
+      indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
+      // } else {
+      // elevator.elevatorMotor.set(0);
+      // indexer.indexerMotor.set(0);
+      // }
     }, shooter, elevator, indexer);
   }
 
@@ -53,13 +54,8 @@ public class ScoringFactory {
       double rps = -turretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5)); // .5
-      if (shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) { // 97
-        elevator.elevatorMotor.set(-rps / 100);
-        indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
-      } else {
-        elevator.elevatorMotor.set(0);
-        indexer.indexerMotor.set(0);
-      }
+      elevator.elevatorMotor.set(-rps / 100);
+      indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
     }, shooter, elevator, indexer);
   }
 

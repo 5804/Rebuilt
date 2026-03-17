@@ -43,7 +43,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
-    public String[] limelights = { "limelight-front", "limelight-back", "limelight-right" };
+    public String[] limelights = { "limelight-front"/*, "limelight-back", "limelight-right" */};
 
     private final ShuffleboardTab odometryTab = Shuffleboard.getTab("Odometry");
     private final Field2d field = new Field2d();
