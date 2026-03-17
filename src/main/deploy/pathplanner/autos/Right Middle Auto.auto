@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RMFirstPath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ScoreFor3.5"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RMSecondPath"
+          }
+        },
+        {
+          "type": "deadline",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "RMThirdPath"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RMFourthPath"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RMFifthPath"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Official Autos",
+  "choreoAuto": false
+}
