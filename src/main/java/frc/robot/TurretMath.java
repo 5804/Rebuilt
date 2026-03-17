@@ -14,8 +14,8 @@ public class TurretMath {
     // Hub Height = 1.75 Meters
 
     // Shooter offset from robot center (meters)
-    private static final double OFFSET_X = 0.0;
-    private static final double OFFSET_Y = -0.25;
+    private static final double OFFSET_X = -0.25;
+    private static final double OFFSET_Y = 0.0;
     private static final double OFFSET_Z = 0.7112;
 
     private static final double LAUNCH_ANGLE = Math.toRadians(15.0);

@@ -30,21 +30,18 @@ public class ScoringFactory {
     this.isRedAlliance = a;
     this.turretMath = t;
   }
-
+  boolean reachedSpeed = false;
   public Command runShooter() {
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
     return Commands.run(() -> {
       double rps = turretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5)); // .5
-      // if (shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps *
-      // 0.03)) { // 97
+      if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps *
+      0.03)) {
       elevator.elevatorMotor.set(-rps / 100);
       indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
-      // } else {
-      // elevator.elevatorMotor.set(0);
-      // indexer.indexerMotor.set(0);
-      // }
+    }
     }, shooter, elevator, indexer);
   }
 
@@ -61,6 +58,7 @@ public class ScoringFactory {
 
   public Command stopShooter() {
     return Commands.run(() -> {
+      reachedSpeed = false;
       shooter.leftShooterMotor.set(0);
       elevator.elevatorMotor.set(0);
       indexer.indexerMotor.set(0);
