@@ -17,6 +17,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -28,11 +29,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commandfactories.ScoringFactory;
 import frc.robot.TurretMath;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Indexer;
@@ -60,8 +63,11 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController joystick = new CommandXboxController(0);
+    private final CommandXboxController xboxController = new CommandXboxController(0);
     private final ButtonBoard xKeys = new ButtonBoard(21, 1);
+    private final Joystick joystick = new Joystick(3);
+    
+    public int climbTriggerHeld = 0;
 
     public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static TurretMath turretMath = new TurretMath();
@@ -70,7 +76,7 @@ public class RobotContainer {
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
-    public Shooter shooterSpeed = new Shooter();
+    public Climber climber = new Climber(() -> { return -1 * joystick.getRawAxis(1) * climbTriggerHeld; });
 
     ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer, drivetrain, isRedAlliance,
             turretMath);
@@ -144,11 +150,11 @@ public class RobotContainer {
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
                 // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with
+                drivetrain.applyRequest(() -> drive.withVelocityX(-xboxController.getLeftY() * MaxSpeed) // Drive forward with
                                                                                                    // negative Y
                                                                                                    // (forward)
-                        .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with
+                        .withVelocityY(-xboxController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                        .withRotationalRate(-xboxController.getRightX() * MaxAngularRate) // Drive counterclockwise with
                                                                                     // negative X (left)
                 ));
 
@@ -158,22 +164,22 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
-        // Joystick
-        joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        // xboxController
+        xboxController.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        joystick.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
-        joystick.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
+        xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
+        xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
-        joystick.rightTrigger().whileTrue(scoringFactory.runShooter());
-        joystick.rightTrigger().onFalse(scoringFactory.stopShooter());
+        xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
+        xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
 
-        joystick.leftTrigger().whileTrue(intake.runIntake());
-        joystick.leftTrigger().onFalse(intake.stopIntake());
+        xboxController.leftTrigger().whileTrue(intake.runIntake());
+        xboxController.leftTrigger().onFalse(intake.stopIntake());
 
-        joystick.povDown().onTrue(turret.aimTurret());
+        xboxController.povDown().onTrue(turret.aimTurret());
 
-        joystick.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
-        joystick.x().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= .25 ;}));
+        xboxController.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
+        xboxController.x().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= .25 ;}));
 
         // X-Keys
         xKeys.getButton(14).onTrue(turret.aimTurret());
@@ -195,6 +201,14 @@ public class RobotContainer {
 
         xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());
         xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
+
+        // Trigger + Climber
+        climber.setDefaultCommand(climber.setClimberSpeed());
+
+        Trigger joystickTrigger = new Trigger(() -> { return joystick.getTrigger(); });
+
+        joystickTrigger.whileTrue(new InstantCommand(() -> { climbTriggerHeld = 1; }));
+        joystickTrigger.whileFalse(new InstantCommand(() -> { climbTriggerHeld = 0; }));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

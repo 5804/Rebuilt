@@ -34,6 +34,8 @@ public final class Constants {
         public static final double MAX_SPEED = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
         public static final double MAX_ANGULAR_RATE = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocit
     }
-
-
+    public final class ClimberConstants {
+        public static final int LEFT_CLIMBER_MOTOR_ID = 99;
+        public static final int RIGHT_CLIMBER_MOTOR_ID = 99;
+    }
 }
