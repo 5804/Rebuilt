@@ -1,5 +1,7 @@
 // All comments written by Hunt because he was bored and so when he has to explain he can reference his own comments ;)
 
+package frc.robot;
+
 public class TurretMath {
 
     // Outputs
