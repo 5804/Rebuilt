@@ -172,6 +172,9 @@ public class RobotContainer {
 
         joystick.povDown().onTrue(turret.aimTurret());
 
+        joystick.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
+        joystick.x().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= .25 ;}));
+
         // X-Keys
         xKeys.getButton(14).onTrue(turret.aimTurret());
         xKeys.getButton(15).onTrue(aimTurretStop());

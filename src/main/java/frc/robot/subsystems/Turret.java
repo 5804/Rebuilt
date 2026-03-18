@@ -89,7 +89,6 @@ public class Turret extends SubsystemBase {
       new Translation2d(-.25, 0),
       new Rotation2d()
     ));
-
     int teamNum = isRedAlliance ? 0 : 1;
     SmartDashboard.putNumber("Dist from Hub", Math.sqrt(Math.pow((turretPose.getX() - hubPos[teamNum][0]), 2) + Math.pow((turretPose.getY() - hubPos[teamNum][1]), 2)));
     turretMath.calculateTurretMath(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(),
