@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -38,6 +39,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
+import frc.robot.ButtonBoard;;
 
 public class RobotContainer {
     private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
@@ -59,6 +61,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
+    private final ButtonBoard xKeys = new ButtonBoard(21, 1);
 
     public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static TurretMath turretMath = new TurretMath();
@@ -94,6 +97,14 @@ public class RobotContainer {
                     indexer.indexerMotor.set(0);
                 })));
 
+        NamedCommands.registerCommand("ScoreFor15", new ParallelCommandGroup(
+                turret.aimTurret(),
+                scoringFactory.runShooter()).withTimeout(15)
+                .andThen(new InstantCommand(() -> {
+                    shooter.leftShooterMotor.set(0);
+                    elevator.elevatorMotor.set(0);
+                    indexer.indexerMotor.set(0);
+                })));
         NamedCommands.registerCommand("StopTurretAim", aimTurretStop());
         NamedCommands.registerCommand("RunIntake", intake.runIntake().repeatedly());
         NamedCommands.registerCommand("StopIntake", intake.stopIntake());
@@ -124,8 +135,8 @@ public class RobotContainer {
         LimelightHelpers.setCameraPose_RobotSpace("limelight-front", 0.28, 0.28, 0.26, 0, 30, 0);
         LimelightHelpers.setPipelineIndex("limelight-front", 0);
 
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-back", -0.28, -0.28, 0.26, 0, 30, 180);
-        LimelightHelpers.setPipelineIndex("limelight-back", 0);
+        // LimelightHelpers.setCameraPose_RobotSpace("limelight-back", -0.1, 0.21, 0.72, 0, 0, 180);
+        // LimelightHelpers.setPipelineIndex("limelight-back", 0);
     }
 
     private void configureBindings() {
@@ -147,16 +158,8 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
+        // Joystick
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-
-        joystick.rightBumper().whileTrue(elevator.runElevator());
-        joystick.rightBumper().onFalse(elevator.stopElevator());
-
-        joystick.leftBumper().whileTrue(indexer.runIndexer());
-        joystick.leftBumper().onFalse(indexer.stopIndexer());
-
-        joystick.a().whileTrue(shooter.runShooter());
-        joystick.a().onFalse(shooter.stopShooter());
 
         joystick.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
         joystick.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
@@ -165,13 +168,30 @@ public class RobotContainer {
         joystick.rightTrigger().onFalse(scoringFactory.stopShooter());
 
         joystick.leftTrigger().whileTrue(intake.runIntake());
-        joystick.leftTrigger().whileFalse(intake.stopIntake());
+        joystick.leftTrigger().onFalse(intake.stopIntake());
 
-        joystick.povUp().onTrue(turret.aimTurret());
-        joystick.povDown().onTrue(aimTurretStop());
+        joystick.povDown().onTrue(turret.aimTurret());
 
-        joystick.y().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED += 0.2; } ));
-        joystick.x().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= 0.2; } ));
+        // X-Keys
+        xKeys.getButton(14).onTrue(turret.aimTurret());
+        xKeys.getButton(15).onTrue(aimTurretStop());
+
+        xKeys.getButton(19).whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
+        xKeys.getButton(19).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
+
+        xKeys.getButton(21).onTrue(new InstantCommand(() -> {CommandScheduler.getInstance().cancelAll();}));
+
+        xKeys.getButton(3).whileTrue(indexer.runIndexer());
+        xKeys.getButton(3).onFalse(indexer.stopIndexer());
+
+        xKeys.getButton(2).whileTrue(elevator.runElevator());
+        xKeys.getButton(2).onFalse(elevator.stopElevator());
+
+        xKeys.getButton(1).whileTrue(shooter.runShooter());
+        xKeys.getButton(1).onFalse(shooter.stopShooter());
+
+        xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());
+        xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
