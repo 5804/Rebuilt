@@ -45,10 +45,12 @@ import frc.robot.subsystems.Turret;
 import frc.robot.ButtonBoard;;
 
 public class RobotContainer {
-    private double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
+    private static final double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
                                                                                         // speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
+    private static final double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
                                                                                       // max angular velocity
+    public static double speedMultiplier = 1;
+    public static double rotationEnabled = 1;
 
     public boolean turretAutoLock = false;
 
@@ -58,6 +60,11 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
+    public static final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
+            .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005) // Add a 20% deadband
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+            
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -65,7 +72,7 @@ public class RobotContainer {
 
     private final CommandXboxController xboxController = new CommandXboxController(0);
     private final ButtonBoard xKeys = new ButtonBoard(21, 1);
-    private final Joystick joystick = new Joystick(3);
+    private final Joystick joystick = new Joystick(2);
     
     public int climbTriggerHeld = 0;
 
@@ -148,15 +155,19 @@ public class RobotContainer {
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
-                // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() -> drive.withVelocityX(-xboxController.getLeftY() * MaxSpeed) // Drive forward with
-                                                                                                   // negative Y
-                                                                                                   // (forward)
-                        .withVelocityY(-xboxController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-xboxController.getRightX() * MaxAngularRate) // Drive counterclockwise with
-                                                                                    // negative X (left)
-                ));
+        // if (climbTriggerHeld == 0) {
+            drivetrain.setDefaultCommand(
+                    // Drivetrain will execute this command periodically
+                    drivetrain.applyRequest(() -> drive.withVelocityX(-xboxController.getLeftY() * MaxSpeed * speedMultiplier) // Drive forward with
+                                                                                                    // negative Y
+                                                                                                    // (forward)
+                            .withVelocityY(-xboxController.getLeftX() * MaxSpeed * speedMultiplier) // Drive left with negative X (left)
+                            .withRotationalRate(-xboxController.getRightX() * MaxAngularRate * speedMultiplier * rotationEnabled) // Drive counterclockwise with
+                                                                                        // negative X (left)
+                    /*    ? (climbTriggerHeld == 1) : () -> drive.withVelocityX(-Math.sqrt(joystick.getRawAxis(1)))*/
+                    )
+                );
+        
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.

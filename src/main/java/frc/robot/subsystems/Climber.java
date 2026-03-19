@@ -23,6 +23,7 @@ public class Climber extends SubsystemBase {
 
     public TalonFX leftClimberMotor;
     public TalonFX rightClimberMotor;
+    public TalonFX linearActuator;
 
     public TalonFXConfiguration climberTalonFXConfigs = new TalonFXConfiguration();
     public Slot0Configs climberSlot0Configs = climberTalonFXConfigs.Slot0;
@@ -30,11 +31,14 @@ public class Climber extends SubsystemBase {
     public MotorOutputConfigs climberMotorOutputFXConfigs = climberTalonFXConfigs.MotorOutput;
 
     public Climber(DoubleSupplier climberSup) {
-        leftClimberMotor  = new TalonFX(Constants.ClimberConstants.LEFT_CLIMBER_MOTOR_ID);
-        rightClimberMotor  = new TalonFX(Constants.ClimberConstants.RIGHT_CLIMBER_MOTOR_ID);
-        rightClimberMotor.setControl(new Follower(Constants.ClimberConstants.LEFT_CLIMBER_MOTOR_ID, MotorAlignmentValue.Aligned));
+        leftClimberMotor = new TalonFX(Constants.ClimberConstants.LEFT_CLIMBER_MOTOR_ID);
+        rightClimberMotor = new TalonFX(Constants.ClimberConstants.RIGHT_CLIMBER_MOTOR_ID);
+        rightClimberMotor.setControl(
+                new Follower(Constants.ClimberConstants.LEFT_CLIMBER_MOTOR_ID, MotorAlignmentValue.Aligned));
+
+        linearActuator = new TalonFX(Constants.ClimberConstants.LINEAR_ACTUATOR_MOTOR);
         leftClimberMotor.setPosition(0);
-        
+
         climberSlot0Configs.kS = 0.25;
         climberSlot0Configs.kV = 0.12;
         climberSlot0Configs.kA = 0.01;
@@ -49,15 +53,40 @@ public class Climber extends SubsystemBase {
         climberMotorOutputFXConfigs.NeutralMode = NeutralModeValue.Brake;
 
         leftClimberMotor.getConfigurator().apply(climberTalonFXConfigs);
-        
+
         this.climberSup = climberSup;
     }
 
     public Command setClimberPosition(double position, double tolerance) {
         MotionMagicVoltage request = new MotionMagicVoltage(0);
-        return run(() -> { leftClimberMotor.setControl(request.withPosition(position)); })
-              .until(() -> { return Math.abs(getClimberPosition() - position) < tolerance; });
-      }
+        return run(() -> {
+            leftClimberMotor.setControl(request.withPosition(position));
+        })
+                .until(() -> {
+                    return Math.abs(getClimberPosition() - position) < tolerance;
+                });
+    }
+
+    public Command extendActuator() {
+        return run(() -> { linearActuator.set(-.1); })
+            .until(() -> {
+                return Math.abs(linearActuator.getPosition().getValueAsDouble()) >=
+                (Math.abs(Constants.ClimberConstants.MAX_ACTUATOR_POSITION) - Constants.ClimberConstants.ACTUATOR_POS_TOLERANCE);
+            });
+    }
+
+    public Command retractActuator() {
+        return run(() -> { linearActuator.set(.1); })
+            .until(() -> {
+                return Math.abs(linearActuator.getPosition().getValueAsDouble()) >=
+                (Math.abs(Constants.ClimberConstants.ZERO_ACTUATOR_POSITION) - Constants.ClimberConstants.ACTUATOR_POS_TOLERANCE);
+            });
+    }
+
+    public Command setActuatorPosition(double pos) {
+        MotionMagicVoltage request = new MotionMagicVoltage(0);
+        return run(() -> { leftClimberMotor.setControl(request.withPosition(pos)); });
+    }
 
     public Command setClimberSpeed() { return run(() -> { leftClimberMotor.set(climberSup.getAsDouble()); }); }
 
