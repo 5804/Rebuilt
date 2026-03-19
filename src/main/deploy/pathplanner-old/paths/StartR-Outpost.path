@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.581,
+        "y": 0.4572987477638639
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.343579545454545,
+        "y": 0.6955909090909096
+      },
+      "isLocked": false,
+      "linkedName": "StartR"
+    },
+    {
+      "anchor": {
+        "x": 0.2,
+        "y": 0.7655813953488371
+      },
+      "prevControl": {
+        "x": 1.4778068181818178,
+        "y": 0.6852840909090911
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Outpost"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Pickup Ball",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

@@ -22,10 +22,12 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.ButtonBoard;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.IntakeConstants;
@@ -59,17 +61,19 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController joystick = new CommandXboxController(0);
+    private final ButtonBoard xKeys = new ButtonBoard(21, 1);
 
     public static final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     public static TurretMath turretMath = new TurretMath();
     public static final Turret turret = new Turret(drivetrain, turretMath, isRedAlliance);
+    
     public final Elevator elevator = new Elevator();
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
     public Shooter shooterSpeed = new Shooter();
 
-    ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer, drivetrain, isRedAlliance,
+    ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer, intake, drivetrain, isRedAlliance,
             turretMath);
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -111,12 +115,13 @@ public class RobotContainer {
         autoChooser.addOption("Two Meter Test", TwoMeterTest());
         autoChooser.addOption("90 Degree Rotation Test", RotationTest());
         autoChooser.addOption("Left Side Auto", LeftSideAuto());
+        autoChooser.addOption("Left Middle Auto", LeftMiddleAuto());
+        autoChooser.addOption("Left Middle U-Auto", LeftUMiddleAuto());
+        autoChooser.addOption("Left Middle Pass Auto", LeftPassMiddleAuto());
         autoChooser.addOption("Right Side Auto", RightSideAuto());
         autoChooser.addOption("Right Middle Auto", RightMiddleAuto());
-        autoChooser.addOption("Right Middle U-Auto", RightMiddleUAuto());
+        autoChooser.addOption("Right Middle U-Auto", RightUMiddleAuto());
         autoChooser.addOption("Right Middle Pass Auto", RightPassMiddleAuto());
-        autoChooser.addOption("RMJ", RMJAuto());
-
 
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
@@ -147,16 +152,8 @@ public class RobotContainer {
         RobotModeTriggers.disabled().whileTrue(
                 drivetrain.applyRequest(() -> idle).ignoringDisable(true));
 
+        // Joystick
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-
-        joystick.rightBumper().whileTrue(elevator.runElevator());
-        joystick.rightBumper().onFalse(elevator.stopElevator());
-
-        joystick.leftBumper().whileTrue(indexer.runIndexer());
-        joystick.leftBumper().onFalse(indexer.stopIndexer());
-
-        joystick.a().whileTrue(shooter.runShooter());
-        joystick.a().onFalse(shooter.stopShooter());
 
         joystick.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
         joystick.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
@@ -165,13 +162,30 @@ public class RobotContainer {
         joystick.rightTrigger().onFalse(scoringFactory.stopShooter());
 
         joystick.leftTrigger().whileTrue(intake.runIntake());
-        joystick.leftTrigger().whileFalse(intake.stopIntake());
+        joystick.leftTrigger().onFalse(intake.stopIntake());
 
-        joystick.povUp().onTrue(turret.aimTurret());
-        joystick.povDown().onTrue(aimTurretStop());
+        // X-Keys
+        xKeys.getButton(14).onTrue(turret.aimTurret());
+        xKeys.getButton(15).onTrue(aimTurretStop());
 
-        joystick.y().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED += 0.2; } ));
-        joystick.x().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= 0.2; } ));
+        xKeys.getButton(19).whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
+        xKeys.getButton(19).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
+
+        xKeys.getButton(21).onTrue(new InstantCommand(() -> {CommandScheduler.getInstance().cancelAll();}));
+
+        xKeys.getButton(3).whileTrue(indexer.runIndexer());
+        xKeys.getButton(3).onFalse(indexer.stopIndexer());
+
+        xKeys.getButton(2).whileTrue(elevator.runElevator());
+        xKeys.getButton(2).onFalse(elevator.stopElevator());
+
+        xKeys.getButton(1).whileTrue(shooter.runShooter());
+        xKeys.getButton(1).onFalse(shooter.stopShooter());
+
+        xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());
+        xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
+        // joystick.y().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED += 0.2; } ));
+        // joystick.x().onTrue(Commands.runOnce(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= 0.2; } ));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
@@ -179,19 +193,14 @@ public class RobotContainer {
     public Command getAutonomousCommand() { return autoChooser.getSelected(); }
 
     public Command LeftSideAuto() { return new PathPlannerAuto("Left Side Auto"); }
-
+    public Command LeftMiddleAuto() { return new PathPlannerAuto("Left Middle Auto"); }
+    public Command LeftUMiddleAuto() { return new PathPlannerAuto("Left-U Middle Auto"); }
+    public Command LeftPassMiddleAuto() { return new PathPlannerAuto("Left Middle Passing Auto"); }
     public Command RightSideAuto() { return new PathPlannerAuto("Right Side Auto"); }
-
     public Command RightMiddleAuto() { return new PathPlannerAuto("Right Middle Auto"); }
-
-    public Command RightMiddleUAuto() { return new PathPlannerAuto("Right Middle U-Auto"); }
-
+    public Command RightUMiddleAuto() { return new PathPlannerAuto("Right-U Middle Auto"); }
     public Command RightPassMiddleAuto() { return new PathPlannerAuto("Right Middle Passing Auto"); }
-
     public Command TwoMeterTest() { return new PathPlannerAuto("2MeterTest"); }
-
     public Command RotationTest() { return new PathPlannerAuto("90DegreeTest"); }
-
-    public Command RMJAuto() { return new PathPlannerAuto("RMJ"); }
 
 }

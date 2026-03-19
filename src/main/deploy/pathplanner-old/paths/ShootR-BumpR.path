@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.893416815742397,
+        "y": 2.3881216457960637
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9619886363636363,
+        "y": 2.427136363636364
+      },
+      "isLocked": false,
+      "linkedName": "ShootR"
+    },
+    {
+      "anchor": {
+        "x": 5.920045454545455,
+        "y": 2.519897727272728
+      },
+      "prevControl": {
+        "x": 4.930590909090909,
+        "y": 2.478670454545455
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BumpR"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": -137.41950921665634
+  },
+  "reversed": false,
+  "folder": "Cross Bump",
+  "idealStartingState": {
+    "velocity": 0.0,
+    "rotation": -137.42
+  },
+  "useDefaultConstraints": false
+}

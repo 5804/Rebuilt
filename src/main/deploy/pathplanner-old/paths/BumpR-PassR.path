@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.920045454545455,
+        "y": 2.519897727272728
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.930113636363636,
+        "y": 2.5920454545454548
+      },
+      "isLocked": false,
+      "linkedName": "BumpR"
+    },
+    {
+      "anchor": {
+        "x": 6.425079545454545,
+        "y": 0.737
+      },
+      "prevControl": {
+        "x": 6.4972272727272715,
+        "y": 1.1800113636363643
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "PassR"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.2,
+      "maxWaypointRelativePos": 0.25,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -137.42
+  },
+  "reversed": false,
+  "folder": "Shoot",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -137.42
+  },
+  "useDefaultConstraints": false
+}

@@ -1,0 +1,93 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.920045454545455,
+        "y": 5.581022727272727
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.826806818181819,
+        "y": 5.364579545454546
+      },
+      "isLocked": false,
+      "linkedName": "BumpL"
+    },
+    {
+      "anchor": {
+        "x": 7.764965909090909,
+        "y": 4.158681818181818
+      },
+      "prevControl": {
+        "x": 7.775272727272727,
+        "y": 4.838931818181818
+      },
+      "nextControl": {
+        "x": 7.745838822022561,
+        "y": 2.8962940716707433
+      },
+      "isLocked": false,
+      "linkedName": "PickupCross"
+    },
+    {
+      "anchor": {
+        "x": 5.920045454545455,
+        "y": 2.519897727272728
+      },
+      "prevControl": {
+        "x": 6.8299770897706935,
+        "y": 2.4889772727272725
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BumpR"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.34346504559270485,
+      "rotationDegrees": -41.74235722881224
+    },
+    {
+      "waypointRelativePos": 0.7811550151975676,
+      "rotationDegrees": -90.06766916315705
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.21070811744386897,
+      "maxWaypointRelativePos": 1.3436960276338517,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.0,
+    "rotation": -137.41950921665634
+  },
+  "reversed": false,
+  "folder": "Pickup Ball",
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": 41.081751135932684
+  },
+  "useDefaultConstraints": false
+}
