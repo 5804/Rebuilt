@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -42,6 +43,8 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  * https://v6.docs.ctr-electronics.com/en/stable/docs/tuner/tuner-swerve/index.html
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
+
+    Pigeon2 pigeon = new Pigeon2(0, "rio");
 
     public String[] limelights = { "limelight-front"/*, "limelight-back", "limelight-right" */};
 
@@ -303,7 +306,9 @@ double maxVel = 0;
         }
 
         for (String ll : limelights) {
-            LimelightHelpers.SetRobotOrientation(ll, getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            double robotYaw = pigeon.getYaw().getValueAsDouble();
+
+            LimelightHelpers.SetRobotOrientation(ll, robotYaw, 0, 0, 0, 0, 0);
             LimelightHelpers.PoseEstimate individualVisionPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
             
             boolean rejectUpdate = false;

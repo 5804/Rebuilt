@@ -192,6 +192,9 @@ public class RobotContainer {
         xboxController.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
         xboxController.x().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= .25 ;}));
 
+        xboxController.povRight().whileTrue(climber.extendActuator());
+        xboxController.povLeft().whileTrue(climber.retractActuator());
+
         // X-Keys
         xKeys.getButton(14).onTrue(turret.aimTurret());
         xKeys.getButton(15).onTrue(aimTurretStop());

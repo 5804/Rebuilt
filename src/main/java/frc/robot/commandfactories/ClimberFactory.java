@@ -54,5 +54,5 @@ public class ClimberFactory {
         } );
      }
 
-     public Command setClimbPos() { return Commands.run(() -> { alignClimber("Front"); }); }
+     public Command setClimbPos() { return Commands.run(() -> { alignClimber("front"); }); }
 }
