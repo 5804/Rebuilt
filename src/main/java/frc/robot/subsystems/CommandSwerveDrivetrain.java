@@ -51,6 +51,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final ShuffleboardTab odometryTab = Shuffleboard.getTab("Odometry");
     private final Field2d field = new Field2d();
     private final SwerveRequest.ApplyRobotSpeeds pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
+    public final Pigeon2 m_gyro = new Pigeon2(0);
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -282,13 +283,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 double maxVel = 0;
     @Override
     public void periodic() {
+        double rotationAngle = m_gyro.getYaw().getValueAsDouble();
         field.setRobotPose(this.getState().Pose);
         
         SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
         SmartDashboard.putNumber("Odometry Y", getState().Pose.getY());
         SmartDashboard.putNumber("Angle", getState().Pose.getRotation().getDegrees());
         SmartDashboard.putNumber("VX", getState().Speeds.vxMetersPerSecond);
-      SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
+        SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
         SmartDashboard.putNumber("Shooter Velocity (RPS)", Constants.ShooterConstants.SHOOTER_SPEED);
         if (maxVel < Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2))))
             maxVel = Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2)));
@@ -306,23 +308,23 @@ double maxVel = 0;
         }
 
         for (String ll : limelights) {
-            double robotYaw = pigeon.getYaw().getValueAsDouble();
+            LimelightHelpers.SetRobotOrientation(ll, rotationAngle + 90, 0, 0, 0, 0, 0);
+            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
 
-            LimelightHelpers.SetRobotOrientation(ll, robotYaw, 0, 0, 0, 0, 0);
-            LimelightHelpers.PoseEstimate individualVisionPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
-            
+            SmartDashboard.putNumber("CurrentRotation", getState().Pose.getRotation().getDegrees());
+
             boolean rejectUpdate = false;
-            if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)){
-                rejectUpdate = true;
-            }
-            
-            if(individualVisionPoseEstimate.tagCount < 2){
+            if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)) {
                 rejectUpdate = true;
             }
 
-            if(!rejectUpdate) {
-                setVisionMeasurementStdDevs(VecBuilder.fill(.1,.15,Math.toRadians(360)));
-                addVisionMeasurement(individualVisionPoseEstimate.pose, individualVisionPoseEstimate.timestampSeconds);
+            if (mt2.tagCount <= 0) {
+                rejectUpdate = true;
+            }
+
+            if (!rejectUpdate) {
+                setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, Math.toRadians(20)));
+                addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
             }
         }
     }

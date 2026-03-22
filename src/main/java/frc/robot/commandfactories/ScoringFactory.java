@@ -40,6 +40,7 @@ public class ScoringFactory {
       if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps *
       0.03)) {
       elevator.elevatorMotor.set(-rps / 100);
+      elevator.tempIndexMotor.set(-rps/100); // Delete this when index runs off elevator
       indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
     }
     }, shooter, elevator, indexer);
@@ -61,6 +62,7 @@ public class ScoringFactory {
       reachedSpeed = false;
       shooter.leftShooterMotor.set(0);
       elevator.elevatorMotor.set(0);
+      elevator.tempIndexMotor.set(0); // delete this when index runs off elevator
       indexer.indexerMotor.set(0);
     }, shooter, elevator, indexer);
   }

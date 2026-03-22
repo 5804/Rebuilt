@@ -145,11 +145,11 @@ public class RobotContainer {
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
 
-        LimelightHelpers.setCameraPose_RobotSpace("limelight-front", 0.28, 0.28, 0.26, 0, 30, 0);
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-front", 0.28, 0.28, 0.21, 0, 30, 0);
         LimelightHelpers.setPipelineIndex("limelight-front", 0);
 
-        // LimelightHelpers.setCameraPose_RobotSpace("limelight-back", -0.1, 0.21, 0.72, 0, 0, 180);
-        // LimelightHelpers.setPipelineIndex("limelight-back", 0);
+        LimelightHelpers.setCameraPose_RobotSpace("limelight-back", -0.32, 0, 0.22, 0, 16, 180);
+        LimelightHelpers.setPipelineIndex("limelight-back", 0);
     }
 
     private void configureBindings() {
