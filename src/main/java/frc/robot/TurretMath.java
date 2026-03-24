@@ -31,11 +31,11 @@ public class TurretMath {
     // }
 
     private double distanceToAirtime(double distance) {
-        return 0.128428 * distance + 0.453662;
+        return 0.270343 * distance + 0.164374;
     }
 
     private double distanceToRPS(double distance) {
-        return 3.89912 * distance + (35.10389-.25);
+        return 8.20237 * distance + 19.81634-1;
     }
 
     private double distanceToExitVelocity(double distance, double dz) {

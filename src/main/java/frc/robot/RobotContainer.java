@@ -177,6 +177,7 @@ public class RobotContainer {
 
         // xboxController
         xboxController.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        xboxController.back().onTrue(new InstantCommand(() -> {CommandSwerveDrivetrain.m_gyro.reset();}));
 
         xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
         xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));

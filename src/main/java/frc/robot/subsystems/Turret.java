@@ -36,7 +36,7 @@ public class Turret extends SubsystemBase {
 
     var slot0Configs = talonFXConfigs.Slot0;
 
-    slot0Configs.kP = 12; //10
+    slot0Configs.kP = 15; 
     slot0Configs.kI = 0;
     slot0Configs.kD = 0.35;
     slot0Configs.kS = 0.0;
@@ -44,7 +44,7 @@ public class Turret extends SubsystemBase {
     slot0Configs.kA = 0;
 
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 100;
+    motionMagicConfigs.MotionMagicCruiseVelocity = 1;
     motionMagicConfigs.MotionMagicAcceleration = 1000;
     motionMagicConfigs.MotionMagicJerk = 10000;
 
@@ -75,7 +75,7 @@ public class Turret extends SubsystemBase {
       turretMath.calculateTarget(isRedAlliance, drivetrain);
     // turretMath.calculateTarget(isRedAlliance, drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY());
       setYaw(
-          -(drivetrain.getState().Pose.getRotation().getDegrees() - 90)
+          -(drivetrain.getState().Pose.getRotation().getDegrees() + 90)
               + turretMath.turretAngle);
     });
   }
@@ -90,6 +90,7 @@ public class Turret extends SubsystemBase {
       new Rotation2d()
     ));
     int teamNum = isRedAlliance ? 0 : 1;
+    teamNum = 0;
     SmartDashboard.putNumber("Dist from Hub", Math.sqrt(Math.pow((turretPose.getX() - hubPos[teamNum][0]), 2) + Math.pow((turretPose.getY() - hubPos[teamNum][1]), 2)));
     turretMath.calculateTurretMath(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(),
         drivetrain.getState().Pose.getRotation().getRadians(),

@@ -12,7 +12,7 @@ public final class Constants {
     }
     public final class IndexerConstants {
         public static final int INDEXER_MOTOR_ID = 52;
-        public static final double INDEXER_SPEED = -.3; // If going faster than .3, make sure wheels don't break robot
+        public static final double INDEXER_SPEED = -.3;//-.3; // If going faster than .3, make sure wheels don't break robot
         
     }
     public final class ShooterConstants {

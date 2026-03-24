@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.*;
 import java.util.Optional;
 import java.util.function.Supplier;
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
@@ -18,6 +19,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -44,14 +46,12 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
-    Pigeon2 pigeon = new Pigeon2(0, "rio");
-
-    public String[] limelights = { "limelight-front"/*, "limelight-back", "limelight-right" */};
+    public String[] limelights = { "limelight-front", "limelight-back" };
 
     private final ShuffleboardTab odometryTab = Shuffleboard.getTab("Odometry");
     private final Field2d field = new Field2d();
     private final SwerveRequest.ApplyRobotSpeeds pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
-    public final Pigeon2 m_gyro = new Pigeon2(0);
+    public static final Pigeon2 m_gyro = new Pigeon2(0, "SwerveCAN");
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -285,7 +285,8 @@ double maxVel = 0;
     public void periodic() {
         double rotationAngle = m_gyro.getYaw().getValueAsDouble();
         field.setRobotPose(this.getState().Pose);
-        
+        SmartDashboard.putNumber("CurrentRotation", rotationAngle);
+
         SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
         SmartDashboard.putNumber("Odometry Y", getState().Pose.getY());
         SmartDashboard.putNumber("Angle", getState().Pose.getRotation().getDegrees());
@@ -308,17 +309,15 @@ double maxVel = 0;
         }
 
         for (String ll : limelights) {
-            LimelightHelpers.SetRobotOrientation(ll, rotationAngle + 90, 0, 0, 0, 0, 0);
-            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
-
-            SmartDashboard.putNumber("CurrentRotation", getState().Pose.getRotation().getDegrees());
+            LimelightHelpers.SetRobotOrientation(ll, getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
 
             boolean rejectUpdate = false;
             if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)) {
                 rejectUpdate = true;
             }
 
-            if (mt2.tagCount <= 0) {
+            if (mt2.tagCount < 2) {
                 rejectUpdate = true;
             }
 
