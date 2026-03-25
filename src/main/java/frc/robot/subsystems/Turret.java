@@ -75,7 +75,7 @@ public class Turret extends SubsystemBase {
       turretMath.calculateTarget(isRedAlliance, drivetrain);
     // turretMath.calculateTarget(isRedAlliance, drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY());
       setYaw(
-          -(drivetrain.getState().Pose.getRotation().getDegrees() - 90)
+          -(drivetrain.getState().Pose.getRotation().getDegrees() + 90)
               + turretMath.turretAngle);
     });
   }
@@ -90,6 +90,7 @@ public class Turret extends SubsystemBase {
       new Rotation2d()
     ));
     int teamNum = isRedAlliance ? 0 : 1;
+    teamNum = 0;
     SmartDashboard.putNumber("Dist from Hub", Math.sqrt(Math.pow((turretPose.getX() - hubPos[teamNum][0]), 2) + Math.pow((turretPose.getY() - hubPos[teamNum][1]), 2)));
     turretMath.calculateTurretMath(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(),
         drivetrain.getState().Pose.getRotation().getRadians(),

@@ -34,11 +34,12 @@ public class ScoringFactory {
   public Command runShooter() {
     final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
     return Commands.run(() -> {
-      double rps = Constants.ShooterConstants.SHOOTER_SPEED;//turretMath.turretRPS;
+      double rps = turretMath.turretRPS;//Constants.ShooterConstants.SHOOTER_SPEED;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5)); // .5
       if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps *
       0.03)) {
+        reachedSpeed = true;
       elevator.elevatorMotor.set(-rps / 100);
       elevator.tempIndexMotor.set(-rps/100); // Delete this when index runs off elevator
       indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);

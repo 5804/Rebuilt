@@ -51,7 +51,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final ShuffleboardTab odometryTab = Shuffleboard.getTab("Odometry");
     private final Field2d field = new Field2d();
     private final SwerveRequest.ApplyRobotSpeeds pathApplyRobotSpeeds = new SwerveRequest.ApplyRobotSpeeds();
-    public final Pigeon2 m_gyro = new Pigeon2(0);
+    public final Pigeon2 m_gyro = new Pigeon2(1);
 
     private static final double kSimLoopPeriod = 0.004; // 4 ms
     private Notifier m_simNotifier = null;
@@ -308,7 +308,7 @@ double maxVel = 0;
         }
 
         for (String ll : limelights) {
-            LimelightHelpers.SetRobotOrientation(ll, rotationAngle + 90, 0, 0, 0, 0, 0);
+            LimelightHelpers.SetRobotOrientation(ll, rotationAngle, 0, 0, 0, 0, 0);
             LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
 
             SmartDashboard.putNumber("CurrentRotation", getState().Pose.getRotation().getDegrees());

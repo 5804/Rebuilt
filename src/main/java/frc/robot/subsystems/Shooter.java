@@ -31,7 +31,7 @@ public class Shooter extends SubsystemBase {
     leftShooterMotorSlot0Configs.kI = 0;
     leftShooterMotorSlot0Configs.kD = 0;
     
-    leftShooterMotorConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    leftShooterMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     rightShooterMotor.getConfigurator().apply(rightShooterMotorConfig);
     leftShooterMotor.getConfigurator().apply(leftShooterMotorConfig);
