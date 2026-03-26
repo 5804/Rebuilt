@@ -99,6 +99,7 @@ public class ScoringFactory extends SubsystemBase {
   public Command runShooter() {
     return Commands.runOnce(() -> {
       reachedSpeed = false;
+      isReversing = false;
       isShooting = true;
     }, shooter, elevator, indexer);
   }
