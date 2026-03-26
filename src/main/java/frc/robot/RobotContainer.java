@@ -106,7 +106,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("StopShooter", scoringFactory.stopShooter());
         NamedCommands.registerCommand("RunIntake", intake.runIntake());
         NamedCommands.registerCommand("StopIntake", intake.stopIntake());
-        NamedCommands.registerCommand("RunOuttake", new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator()));
+        NamedCommands.registerCommand("RunOuttake", new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
         NamedCommands.registerCommand("StopOuttake", new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), elevator.stopElevator()));
 
         autoChooser.addOption("Middle Left", VABLAmL());
@@ -150,7 +150,7 @@ public class RobotContainer {
         // xboxController
         xboxController.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator()));
+        xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
         xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), elevator.stopElevator()));
 
         xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
@@ -182,10 +182,10 @@ public class RobotContainer {
         xKeys.getButton(3).whileTrue(indexer.runIndexer());
         xKeys.getButton(3).onFalse(indexer.stopIndexer());
 
-        xKeys.getButton(2).whileTrue(elevator.runElevator());
+        xKeys.getButton(2).whileTrue(elevator.runElevator(Constants.ElevatorConstants.ELEVATOR_SPEED));
         xKeys.getButton(2).onFalse(elevator.stopElevator());
 
-        xKeys.getButton(1).whileTrue(shooter.runShooter());
+        xKeys.getButton(1).whileTrue(shooter.runShooter(Constants.ShooterConstants.SHOOTER_SPEED));
         xKeys.getButton(1).onFalse(shooter.stopShooter());
 
         xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());

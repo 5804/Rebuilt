@@ -24,6 +24,9 @@ public class ScoringFactory extends SubsystemBase {
   boolean reachedSpeed = false;
   public boolean isShooting = false;
   public boolean isReversing = false;
+  boolean elevatorToSpeed = false;
+  boolean elevatorUnjamming = false;
+  boolean indexerUnjamming = false;
 
   final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
@@ -42,10 +45,47 @@ public class ScoringFactory extends SubsystemBase {
       double rps = turretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
+
       if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) {
         reachedSpeed = true;
-        elevator.elevatorMotor.set(-rps / 100);
-        indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
+
+        double elevatorVel = Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble());
+        double targetElevatorRps = rps / 100;
+        double indexerVel = Math.abs(indexer.indexerMotor.getVelocity().getValueAsDouble());
+        double targetIndexerRps = Math.abs(Constants.IndexerConstants.INDEXER_SPEED);
+
+        if (elevatorUnjamming) {
+          elevator.elevatorMotor.set(rps / 100);
+          if (elevatorVel >= targetElevatorRps * 0.90) {
+            elevatorUnjamming = false;
+            elevatorToSpeed = false;
+          }
+        } else if (!elevatorToSpeed) {
+          elevator.elevatorMotor.set(-rps / 100);
+          if (elevatorVel < targetElevatorRps * 0.50) {
+            elevatorUnjamming = true;
+          } else if (elevatorVel >= targetElevatorRps * 0.90) {
+            elevatorToSpeed = true;
+          }
+        } else {
+          if (elevatorVel < targetElevatorRps * 0.30) {
+            elevatorUnjamming = true;
+          } else {
+            elevator.elevatorMotor.set(-rps / 100);
+          }
+        }
+
+        if (indexerUnjamming) {
+          indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
+          if (indexerVel >= targetIndexerRps * 0.95) {
+            indexerUnjamming = false;
+          }
+        } else {
+          indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
+          if (indexerVel < targetIndexerRps * 0.30) {
+            indexerUnjamming = true;
+          }
+        }
       }
     } else if (isReversing) {
       double rps = -turretMath.turretRPS;
@@ -56,14 +96,32 @@ public class ScoringFactory extends SubsystemBase {
     }
   }
 
-  public Command runShooter() { return Commands.runOnce(() -> { reachedSpeed = false; isShooting = true; }, shooter, elevator, indexer); }
-  public Command reverseSystem() { return Commands.runOnce(() -> { reachedSpeed = false; isReversing = true; isShooting = false; }, shooter, elevator, indexer); }
-  public Command stopShooter() { return Commands.runOnce(() -> {
-    reachedSpeed = false;
-    isShooting = false;
-    isReversing = false;
-    shooter.leftShooterMotor.set(0);
-    elevator.elevatorMotor.set(0);
-    indexer.indexerMotor.set(0);
-  }, shooter, elevator, indexer); }
+  public Command runShooter() {
+    return Commands.runOnce(() -> {
+      reachedSpeed = false;
+      isShooting = true;
+    }, shooter, elevator, indexer);
+  }
+
+  public Command reverseSystem() {
+    return Commands.runOnce(() -> {
+      reachedSpeed = false;
+      isReversing = true;
+      isShooting = false;
+    }, shooter, elevator, indexer);
+  }
+
+  public Command stopShooter() {
+    return Commands.runOnce(() -> {
+      reachedSpeed = false;
+      elevatorToSpeed = false;
+      elevatorUnjamming = false;
+      indexerUnjamming = false;
+      isShooting = false;
+      isReversing = false;
+      shooter.leftShooterMotor.set(0);
+      elevator.elevatorMotor.set(0);
+      indexer.indexerMotor.set(0);
+    }, shooter, elevator, indexer);
+  }
 }
