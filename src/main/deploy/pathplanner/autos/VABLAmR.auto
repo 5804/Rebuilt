@@ -1,0 +1,190 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLAmR1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AimTurret"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "RunShooter"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLAmR2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopShooter"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopAimTurret"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLAmR3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "VABLAmR4"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLAmR5"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopIntake"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLAmR6"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AimTurret"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunShooter"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "VABLA Middle Autos",
+  "choreoAuto": false
+}

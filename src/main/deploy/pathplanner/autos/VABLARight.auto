@@ -5,13 +5,19 @@
     "data": {
       "commands": [
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RMJ First"
+                  "pathName": "VABLARight1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "AimTurret"
                 }
               },
               {
@@ -21,13 +27,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.0
+                        "waitTime": 0.5
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "ScoreFor3.5"
+                        "name": "RunShooter"
                       }
                     }
                   ]
@@ -39,7 +45,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.0
+            "waitTime": 2.0
           }
         },
         {
@@ -49,26 +55,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RMJ Second"
+                  "pathName": "VABLARight2"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ScoreFor3.5"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "RMJ Third"
+                  "name": "StopShooter"
                 }
               },
               {
@@ -78,13 +71,13 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.74
+                        "waitTime": 0.5
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "RunIntake"
+                        "name": "StopAimTurret"
                       }
                     }
                   ]
@@ -94,13 +87,44 @@
           }
         },
         {
-          "type": "deadline",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RMJ Fourth"
+                  "pathName": "VABLARight3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "VABLARight4"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.25
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLARight5"
                 }
               },
               {
@@ -108,21 +132,40 @@
                 "data": {
                   "name": "StopIntake"
                 }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLARight6"
+                }
               },
               {
                 "type": "sequential",
                 "data": {
                   "commands": [
                     {
+                      "type": "named",
+                      "data": {
+                        "name": "AimTurret"
+                      }
+                    },
+                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.5
+                        "waitTime": 1.0
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "ScoreFor3.5"
+                        "name": "Shoot"
                       }
                     }
                   ]
@@ -135,6 +178,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Official Autos",
+  "folder": "VABLA Right Autos",
   "choreoAuto": false
 }

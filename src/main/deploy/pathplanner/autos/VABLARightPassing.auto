@@ -1,0 +1,170 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "VABLARight1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AimTurret"
+                      }
+                    },
+                    {
+                      "type": "sequential",
+                      "data": {
+                        "commands": [
+                          {
+                            "type": "wait",
+                            "data": {
+                              "waitTime": 0.5
+                            }
+                          },
+                          {
+                            "type": "named",
+                            "data": {
+                              "name": "RunShooter"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLARight2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "StopShooter"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopAimTurret"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLARight3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "VABLARight4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunOuttake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopOuttake"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "VABLARight5Passing"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "RunIntake"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "VABLA Right Autos",
+  "choreoAuto": false
+}
