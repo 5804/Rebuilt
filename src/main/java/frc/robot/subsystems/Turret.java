@@ -23,20 +23,19 @@ public class Turret extends SubsystemBase {
   public TurretMath turretMath;
   public boolean isRedAlliance;
   public CommandSwerveDrivetrain drivetrain;
+  public boolean isAiming = false;
 
   public Turret(CommandSwerveDrivetrain d, TurretMath t, boolean a) {
     this.drivetrain = d;
     this.turretMath = t;
     this.isRedAlliance = a;
     turretMath.calculateTarget(isRedAlliance, drivetrain);
-        // turretMath.calculateTarget(isRedAlliance, drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY());
-    var talonFXConfigs = new TalonFXConfiguration();
 
+    var talonFXConfigs = new TalonFXConfiguration();
     talonFXConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     var slot0Configs = talonFXConfigs.Slot0;
-
-    slot0Configs.kP = 12; //10
+    slot0Configs.kP = 12;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0.35;
     slot0Configs.kS = 0.0;
@@ -49,51 +48,40 @@ public class Turret extends SubsystemBase {
     motionMagicConfigs.MotionMagicJerk = 10000;
 
     yawMotor.getConfigurator().apply(talonFXConfigs);
-
     yawMotor.setPosition(0 / 360);
   }
 
   final MotionMagicVoltage motionMagicRequest = new MotionMagicVoltage(0);
-
   private double TURRET_GEAR_RATIO = 6.4;
+  double[][] hubPos = {{ 4.625594, 4 }, { 11.665394, 4 }};
 
   private double normalizeAngle(double deg) { return MathUtil.inputModulus(deg, -180.0, 180.0); }
 
-  public void setYaw(double angleDeg) {
-    double targetAngle = TURRET_GEAR_RATIO * normalizeAngle(angleDeg) / 360;
-    yawMotor.setControl(new MotionMagicExpoVoltage(targetAngle));
-  }
+  public void setYaw(double angleDeg) { yawMotor.setControl(new MotionMagicExpoVoltage(TURRET_GEAR_RATIO * normalizeAngle(angleDeg) / 360)); }
 
   public Command setYawCommand(double angleDeg) {
     double normalized = normalizeAngle(angleDeg);
     double targetAngle = TURRET_GEAR_RATIO * normalized / 360;
-    return run(() -> { yawMotor.setControl(new MotionMagicExpoVoltage(targetAngle)); });
+    return run(() -> yawMotor.setControl(new MotionMagicExpoVoltage(targetAngle)));
   }
 
-  public Command aimTurret() {
-    return Commands.run(() -> {
-      turretMath.calculateTarget(isRedAlliance, drivetrain);
-    // turretMath.calculateTarget(isRedAlliance, drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY());
-      setYaw(
-          -(drivetrain.getState().Pose.getRotation().getDegrees() + 90)
-              + turretMath.turretAngle);
-    });
-  }
+  public Command aimTurret() { return Commands.runOnce(() -> isAiming = true, this); }
+  public Command stopAiming() { return Commands.runOnce(() -> isAiming = false, this); }
 
-  double[][] hubPos = {{ 4.625594, 4 }, { 11.665394, 4 }};
   @Override
   public void periodic() {
     Pose2d robotPose = drivetrain.getState().Pose;
-    Pose2d turretPose = robotPose.transformBy(
-      new Transform2d(
-      new Translation2d(-.25, 0),
-      new Rotation2d()
-    ));
-    int teamNum = isRedAlliance ? 0 : 1;
-    teamNum = 0;
+    Pose2d turretPose = robotPose.transformBy(new Transform2d(new Translation2d(-.25, 0), new Rotation2d()));
+
+    int teamNum = 0;
     SmartDashboard.putNumber("Dist from Hub", Math.sqrt(Math.pow((turretPose.getX() - hubPos[teamNum][0]), 2) + Math.pow((turretPose.getY() - hubPos[teamNum][1]), 2)));
-    turretMath.calculateTurretMath(drivetrain.getState().Pose.getX(), drivetrain.getState().Pose.getY(),
-        drivetrain.getState().Pose.getRotation().getRadians(),
+
+    turretMath.calculateTurretMath(robotPose.getX(), robotPose.getY(), robotPose.getRotation().getRadians(),
         drivetrain.getState().Speeds.vxMetersPerSecond, drivetrain.getState().Speeds.vyMetersPerSecond);
+
+    if (isAiming) {
+      turretMath.calculateTarget(isRedAlliance, drivetrain);
+      setYaw(-(robotPose.getRotation().getDegrees() + 90) + turretMath.turretAngle);
+    }
   }
 }

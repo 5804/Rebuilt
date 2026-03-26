@@ -7,7 +7,7 @@ import static edu.wpi.first.units.Units.*;
 public final class Constants {
     public final class ElevatorConstants {
         public static final int ELEVATOR_MOTOR_ID = 53;
-        public static final double ELEVATOR_SPEED = -1;
+        public static final double ELEVATOR_SPEED = -.3;
         
     }
     public final class IndexerConstants {
