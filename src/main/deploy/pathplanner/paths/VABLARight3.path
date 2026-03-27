@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 6.0,
-        "y": 2.6
+        "y": 2.5
       },
       "prevControl": null,
       "nextControl": {
         "x": 6.923291592128802,
-        "y": 2.551323792486584
+        "y": 2.451323792486584
       },
       "isLocked": false,
       "linkedName": "VABLARight2"
