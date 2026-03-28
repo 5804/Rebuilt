@@ -20,6 +20,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -33,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -44,9 +46,7 @@ import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
  */
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
 
-    Pigeon2 pigeon = new Pigeon2(0, "rio");
-
-    public String[] limelights = { "limelight-front"/*, "limelight-back", "limelight-right" */};
+    public String[] limelights = { "limelight-front", "limelight-back" };
 
     private final ShuffleboardTab odometryTab = Shuffleboard.getTab("Odometry");
     private final Field2d field = new Field2d();
@@ -280,15 +280,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return m_sysIdRoutineToApply.dynamic(direction);
     }
-double maxVel = 0;
+    double maxVel = 0;
+
     @Override
     public void periodic() {
         double rotationAngle = m_gyro.getYaw().getValueAsDouble();
+        double teamFlip = RobotContainer.isRedAlliance ? 180 : 0;
         field.setRobotPose(this.getState().Pose);
         
         SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
         SmartDashboard.putNumber("Odometry Y", getState().Pose.getY());
-        SmartDashboard.putNumber("Angle", getState().Pose.getRotation().getDegrees());
+        SmartDashboard.putNumber("Angle", rotationAngle);
         SmartDashboard.putNumber("VX", getState().Speeds.vxMetersPerSecond);
         SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
         SmartDashboard.putNumber("Shooter Velocity (RPS)", Constants.ShooterConstants.SHOOTER_SPEED);
@@ -306,26 +308,26 @@ double maxVel = 0;
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
         for (String ll : limelights) {
-            LimelightHelpers.SetRobotOrientation(ll, rotationAngle, 0, 0, 0, 0, 0);
-            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
+                LimelightHelpers.SetRobotOrientation(ll, teamFlip + getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+                LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
 
-            SmartDashboard.putNumber("CurrentRotation", getState().Pose.getRotation().getDegrees());
+                SmartDashboard.putNumber("Real rotation", teamFlip + getState().Pose.getRotation().getDegrees());
+                SmartDashboard.putNumber("CurrentRotation", getState().Pose.getRotation().getDegrees());
+                SmartDashboard.putNumber("Currently Visible Tag", NetworkTableInstance.getDefault().getTable(ll).getEntry("tid").getDouble(0.0));
+                boolean rejectUpdate = false;
+                if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)) {
+                    rejectUpdate = true;
+                }
 
-            boolean rejectUpdate = false;
-            if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)) {
-                rejectUpdate = true;
-            }
+                if (mt2.tagCount < 2) {
+                    rejectUpdate = true;
+                }
 
-            if (mt2.tagCount <= 0) {
-                rejectUpdate = true;
-            }
-
-            if (!rejectUpdate) {
-                setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, Math.toRadians(20)));
-                addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
-            }
+                if (!rejectUpdate) {
+                    setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, Math.toRadians(20)));
+                    addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+                }
         }
     }
 

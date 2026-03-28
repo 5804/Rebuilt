@@ -22,9 +22,7 @@ public class Robot extends TimedRobot {
         .withTimestampReplay()
         .withJoystickReplay();
 
-    public Robot() {
-        m_robotContainer = new RobotContainer();
-    }
+    public Robot() { m_robotContainer = new RobotContainer(); }
 
     @Override
     public void robotPeriodic() {
@@ -44,10 +42,7 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().schedule(m_autonomousCommand);
-        }
+        if (m_autonomousCommand != null) { CommandScheduler.getInstance().schedule(m_autonomousCommand); }
     }
 
     @Override
@@ -58,10 +53,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        if (m_autonomousCommand != null) {
-            CommandScheduler.getInstance().cancel(m_autonomousCommand);
-        }
-        // RobotContainer.turret.aimTurret();
+        if (m_autonomousCommand != null) { CommandScheduler.getInstance().cancel(m_autonomousCommand); }
     }
 
     @Override
@@ -71,9 +63,7 @@ public class Robot extends TimedRobot {
     public void teleopExit() {}
 
     @Override
-    public void testInit() {
-        CommandScheduler.getInstance().cancelAll();
-    }
+    public void testInit() { CommandScheduler.getInstance().cancelAll(); }
 
     @Override
     public void testPeriodic() {}

@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.388,
+        "x": 5.869,
         "y": 2.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.289856954069883,
-        "y": 2.4968932332720586
+        "x": 2.5450003884224195,
+        "y": 2.506621267848791
       },
       "isLocked": false,
-      "linkedName": "RMFourthPathEnd"
+      "linkedName": "VABLAmR5"
     },
     {
       "anchor": {
-        "x": 1.5,
+        "x": 2.5,
         "y": 2.5
       },
       "prevControl": {
-        "x": 1.2505732954009157,
-        "y": 2.5169209642999784
+        "x": 5.9343377202018175,
+        "y": 2.5238856016468647
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,12 +29,26 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.82,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -45,9 +59,9 @@
     "rotation": 45.0
   },
   "reversed": false,
-  "folder": "Right Middle Auto",
+  "folder": "VABLA Middle Right Paths",
   "idealStartingState": {
-    "velocity": 0,
+    "velocity": 2.0,
     "rotation": 45.0
   },
   "useDefaultConstraints": false

@@ -1,29 +1,35 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXSConfiguration;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.hardware.TalonFXS;
-import com.ctre.phoenix6.signals.MotorArrangementValue;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Elevator extends SubsystemBase {
   public TalonFX elevatorMotor;
-  public TalonFXS tempIndexMotor; // temp
-
-  // public Elevator() { elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID); } // uncomment when index runs off elevator
+  public TalonFX tempIndexMotor;
+  public boolean isRunning = false;
+  public boolean isReversing = false;
+  public double speed = 0;
 
   public Elevator() {
     elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID);
-    tempIndexMotor = new TalonFXS(0);
-    TalonFXSConfiguration indexConfig = new TalonFXSConfiguration();
-    indexConfig.Commutation.MotorArrangement = MotorArrangementValue.Minion_JST;
-    tempIndexMotor.getConfigurator().apply(indexConfig);
-  } // delete this constructor when indexer changed to run off elevator
 
-  public Command runElevator() { return run(() -> { elevatorMotor.set(Constants.ElevatorConstants.ELEVATOR_SPEED); }); }
+    var elevatorMotorConfig = new TalonFXConfiguration();
+    elevatorMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true));
+    elevatorMotor.getConfigurator().apply(elevatorMotorConfig);
+  }
 
-  public Command stopElevator() { return run(() -> { elevatorMotor.set(0); }); }
+  @Override
+  public void periodic() {
+    if (isRunning) elevatorMotor.set(speed);
+    else if (isReversing) elevatorMotor.set(-speed);
+  }
+
+  public Command runElevator(double speed) { return Commands.runOnce(() -> { isRunning = true; isReversing = false; this.speed = speed; }, this); }
+  public Command reverseElevator(double speed) { return Commands.runOnce(() -> { isReversing = true; isRunning = false; this.speed = speed; }, this); }
+  public Command stopElevator() { return Commands.runOnce(() -> { isRunning = false; isReversing = false; elevatorMotor.set(0); }, this); }
 }

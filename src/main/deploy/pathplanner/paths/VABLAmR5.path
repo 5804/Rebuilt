@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4655813953488368,
-        "y": 7.077262969588551
+        "x": 7.686,
+        "y": 3.373
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.4720669978653245,
-        "y": 5.999078996491523
+        "x": 6.0829109692394905,
+        "y": 2.5242062978799202
       },
       "isLocked": false,
-      "linkedName": "FirstPathEnd"
+      "linkedName": "VABLAmR4"
     },
     {
       "anchor": {
-        "x": 0.4655813953488368,
-        "y": 5.162665474060823
+        "x": 5.869,
+        "y": 2.5
       },
       "prevControl": {
-        "x": 0.46511074762509624,
-        "y": 5.452881407739847
+        "x": 7.493987187131858,
+        "y": 3.3044006292556047
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "VABLAmR5"
     }
   ],
   "rotationTargets": [],
@@ -33,22 +33,22 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -90.0
+    "velocity": 2.0,
+    "rotation": 45.0
   },
   "reversed": false,
-  "folder": "Left Side Auto",
+  "folder": "VABLA Middle Right Paths",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

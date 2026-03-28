@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.fasterxml.jackson.databind.util.Named;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -92,7 +93,7 @@ public class RobotContainer {
     private ShuffleboardTab tab1 = Shuffleboard.getTab("Tab1");
 
     public Command aimTurretStop() {
-        return Commands.run(() -> {
+        return Commands.runOnce(() -> {
             turret.setYaw(0);
         }, turret);
     }
@@ -100,47 +101,18 @@ public class RobotContainer {
     public RobotContainer() {
         configureBindings();
         NamedCommands.registerCommand("AimTurret", turret.aimTurret());
-
-        NamedCommands.registerCommand("ScoreFor3.5", new ParallelCommandGroup(
-                turret.aimTurret(),
-                scoringFactory.runShooter()).withTimeout(3.5)
-                .andThen(new InstantCommand(() -> {
-                    shooter.leftShooterMotor.set(0);
-                    elevator.elevatorMotor.set(0);
-                    indexer.indexerMotor.set(0);
-                })));
-
-        NamedCommands.registerCommand("ScoreFor15", new ParallelCommandGroup(
-                turret.aimTurret(),
-                scoringFactory.runShooter()).withTimeout(15)
-                .andThen(new InstantCommand(() -> {
-                    shooter.leftShooterMotor.set(0);
-                    elevator.elevatorMotor.set(0);
-                    indexer.indexerMotor.set(0);
-                })));
-        NamedCommands.registerCommand("StopTurretAim", aimTurretStop());
-        NamedCommands.registerCommand("RunIntake", intake.runIntake().repeatedly());
+        NamedCommands.registerCommand("StopAimTurret", turret.stopAiming());
+        NamedCommands.registerCommand("RunShooter", shooter.runShooter().andThen(scoringFactory.runShooter()));
+        NamedCommands.registerCommand("StopShooter", shooter.stopShooter().andThen(scoringFactory.stopShooter()));
+        NamedCommands.registerCommand("RunIntake", intake.runIntake());
         NamedCommands.registerCommand("StopIntake", intake.stopIntake());
-        NamedCommands.registerCommand("ReverseIntake", new ParallelCommandGroup(
-            intake.reverseIntake(), indexer.reverseIndexer()).withTimeout(1)
-            .andThen(new InstantCommand(() -> {
-                intake.intakeMotor.set(0);
-                indexer.indexerMotor.set(0);
-            }))
-            );
-        NamedCommands.registerCommand("Shoot", scoringFactory.runShooter().repeatedly());
-        NamedCommands.registerCommand("ShootWithTimeout", scoringFactory.runShooter().withTimeout(5));
-        NamedCommands.registerCommand("StopShoot", scoringFactory.stopShooter());
+        NamedCommands.registerCommand("RunOuttake", new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
+        NamedCommands.registerCommand("StopOuttake", new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), elevator.stopElevator()));
 
-        autoChooser.addOption("Two Meter Test", TwoMeterTest());
-        autoChooser.addOption("90 Degree Rotation Test", RotationTest());
-        autoChooser.addOption("Left Side Auto", LeftSideAuto());
-        autoChooser.addOption("Right Side Auto", RightSideAuto());
-        autoChooser.addOption("Right Middle Auto", RightMiddleAuto());
-        autoChooser.addOption("Right Middle U-Auto", RightMiddleUAuto());
-        autoChooser.addOption("Right Middle Pass Auto", RightPassMiddleAuto());
-        autoChooser.addOption("RMJ", RMJAuto());
-
+        autoChooser.addOption("Middle Left", VABLAmL());
+        autoChooser.addOption("Middle Right", VABLAmR());
+        autoChooser.addOption("Right Side", VABLARight());
+        autoChooser.addOption("Right Passing", VABLARightPassing());
 
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
@@ -178,26 +150,32 @@ public class RobotContainer {
         // xboxController
         xboxController.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
-        xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
+        xboxController.b().onTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
+        xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), elevator.stopElevator()));
 
-        xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
+        xboxController.rightTrigger().onTrue(scoringFactory.runShooter());
         xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
 
-        xboxController.leftTrigger().whileTrue(intake.runIntake());
+        xboxController.leftTrigger().onTrue(intake.runIntake());
         xboxController.leftTrigger().onFalse(intake.stopIntake());
 
         xboxController.povDown().onTrue(turret.aimTurret());
 
+        xboxController.povRight().onTrue(shooter.runShooter());
+        xboxController.povLeft().onTrue(shooter.stopShooter());
+
+        /* // Testing Commands
         xboxController.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
         xboxController.x().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED -= .25 ;}));
 
+        // Climber Commands (Temp)
         xboxController.povRight().whileTrue(climber.extendActuator());
         xboxController.povLeft().whileTrue(climber.retractActuator());
+        */
 
         // X-Keys
         xKeys.getButton(14).onTrue(turret.aimTurret());
-        xKeys.getButton(15).onTrue(aimTurretStop());
+        xKeys.getButton(15).onTrue(aimTurretStop().andThen(turret.stopAiming()));
 
         xKeys.getButton(19).whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
         xKeys.getButton(19).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
@@ -207,7 +185,7 @@ public class RobotContainer {
         xKeys.getButton(3).whileTrue(indexer.runIndexer());
         xKeys.getButton(3).onFalse(indexer.stopIndexer());
 
-        xKeys.getButton(2).whileTrue(elevator.runElevator());
+        xKeys.getButton(2).whileTrue(elevator.runElevator(Constants.ElevatorConstants.ELEVATOR_SPEED));
         xKeys.getButton(2).onFalse(elevator.stopElevator());
 
         xKeys.getButton(1).whileTrue(shooter.runShooter());
@@ -216,33 +194,25 @@ public class RobotContainer {
         xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());
         xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
 
-        // Trigger + Climber
+        xKeys.getButton(13).onTrue(shooter.runShooter());
+        xKeys.getButton(8).onTrue(shooter.stopShooter());
+
+        /* // Trigger + Climber
         climber.setDefaultCommand(climber.setClimberSpeed());
 
         Trigger joystickTrigger = new Trigger(() -> { return joystick.getTrigger(); });
 
         joystickTrigger.whileTrue(new InstantCommand(() -> { climbTriggerHeld = 1; }));
         joystickTrigger.whileFalse(new InstantCommand(() -> { climbTriggerHeld = 0; }));
+        */
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() { return autoChooser.getSelected(); }
 
-    public Command LeftSideAuto() { return new PathPlannerAuto("Left Side Auto"); }
-
-    public Command RightSideAuto() { return new PathPlannerAuto("Right Side Auto"); }
-
-    public Command RightMiddleAuto() { return new PathPlannerAuto("Right Middle Auto"); }
-
-    public Command RightMiddleUAuto() { return new PathPlannerAuto("Right Middle U-Auto"); }
-
-    public Command RightPassMiddleAuto() { return new PathPlannerAuto("Right Middle Passing Auto"); }
-
-    public Command TwoMeterTest() { return new PathPlannerAuto("2MeterTest"); }
-
-    public Command RotationTest() { return new PathPlannerAuto("90DegreeTest"); }
-
-    public Command RMJAuto() { return new PathPlannerAuto("RMJ"); }
-
+    public Command VABLAmR() { return new PathPlannerAuto("VABLAmR"); }
+    public Command VABLAmL() { return new PathPlannerAuto("VABLAmL"); }
+    public Command VABLARight() { return new PathPlannerAuto("VABLARight"); }
+    public Command VABLARightPassing() { return new PathPlannerAuto("VABLARightPassing"); }
 }
