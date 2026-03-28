@@ -284,8 +284,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        double rotationAngle = m_gyro.getYaw().getValueAsDouble();
-        double teamFlip = RobotContainer.isRedAlliance ? 180 : 0;
+        boolean teamFlip = RobotContainer.isRedAlliance;
+        double rotationAngle = (teamFlip ? 180 : 0) + m_gyro.getYaw().getValueAsDouble();
         field.setRobotPose(this.getState().Pose);
         
         SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
@@ -309,12 +309,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         for (String ll : limelights) {
-                LimelightHelpers.SetRobotOrientation(ll, teamFlip + getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-                LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
+                LimelightHelpers.SetRobotOrientation(ll, (teamFlip ? 180 : 0) + getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+                LimelightHelpers.PoseEstimate mt2 = teamFlip ? LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(ll) : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
 
-                SmartDashboard.putNumber("Real rotation", teamFlip + getState().Pose.getRotation().getDegrees());
-                SmartDashboard.putNumber("CurrentRotation", getState().Pose.getRotation().getDegrees());
+                SmartDashboard.putNumber("CurrentRotation", (teamFlip ? 180 : 0) + getState().Pose.getRotation().getDegrees());
                 SmartDashboard.putNumber("Currently Visible Tag", NetworkTableInstance.getDefault().getTable(ll).getEntry("tid").getDouble(0.0));
+                
                 boolean rejectUpdate = false;
                 if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)) {
                     rejectUpdate = true;
