@@ -3,6 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.hardware.TalonFXS;
 import frc.robot.Constants;
 
@@ -11,7 +14,13 @@ public class Intake extends SubsystemBase {
   public boolean isRunning = false;
   public boolean isReversing = false;
 
-  public Intake() { intakeMotor = new TalonFXS(Constants.IntakeConstants.INTAKE_MOTOR_ID); }
+  public Intake() {
+    intakeMotor = new TalonFXS(Constants.IntakeConstants.INTAKE_MOTOR_ID);
+    var intakeMotorConfig = new TalonFXSConfiguration();
+    // intakeMotorConfig.CurrentLimits.SupplyCurrentLimit = 30;
+    intakeMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(20).withSupplyCurrentLimitEnable(true));
+    intakeMotor.getConfigurator().apply(intakeMotorConfig);
+  }
 
   @Override
   public void periodic() {

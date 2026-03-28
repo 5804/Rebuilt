@@ -21,7 +21,6 @@ public class ScoringFactory extends SubsystemBase {
   boolean isRedAlliance;
   TurretMath turretMath;
 
-  boolean reachedSpeed = false;
   public boolean isShooting = false;
   public boolean isReversing = false;
   boolean elevatorToSpeed = false;
@@ -44,11 +43,9 @@ public class ScoringFactory extends SubsystemBase {
     if (isShooting) {
       double rps = turretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
-      shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
+      // shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
 
-      if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) {
-        reachedSpeed = true;
-
+      if (shooter.reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) {
         double elevatorVel = Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble());
         double targetElevatorRps = rps / 100;
         double indexerVel = Math.abs(indexer.indexerMotor.getVelocity().getValueAsDouble());
@@ -98,7 +95,7 @@ public class ScoringFactory extends SubsystemBase {
 
   public Command runShooter() {
     return Commands.runOnce(() -> {
-      reachedSpeed = false;
+      shooter.reachedSpeed = false;
       isReversing = false;
       isShooting = true;
     }, shooter, elevator, indexer);
@@ -106,7 +103,7 @@ public class ScoringFactory extends SubsystemBase {
 
   public Command reverseSystem() {
     return Commands.runOnce(() -> {
-      reachedSpeed = false;
+      shooter.reachedSpeed = false;
       isReversing = true;
       isShooting = false;
     }, shooter, elevator, indexer);
@@ -114,13 +111,13 @@ public class ScoringFactory extends SubsystemBase {
 
   public Command stopShooter() {
     return Commands.runOnce(() -> {
-      reachedSpeed = false;
+      shooter.reachedSpeed = false;
       elevatorToSpeed = false;
       elevatorUnjamming = false;
       indexerUnjamming = false;
       isShooting = false;
       isReversing = false;
-      shooter.leftShooterMotor.set(0);
+      // shooter.leftShooterMotor.set(0);
       elevator.elevatorMotor.set(0);
       indexer.indexerMotor.set(0);
     }, shooter, elevator, indexer);

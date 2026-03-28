@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -13,7 +15,13 @@ public class Elevator extends SubsystemBase {
   public boolean isReversing = false;
   public double speed = 0;
 
-  public Elevator() { elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID); }
+  public Elevator() {
+    elevatorMotor = new TalonFX(Constants.ElevatorConstants.ELEVATOR_MOTOR_ID);
+
+    var elevatorMotorConfig = new TalonFXConfiguration();
+    elevatorMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(40).withSupplyCurrentLimitEnable(true));
+    elevatorMotor.getConfigurator().apply(elevatorMotorConfig);
+  }
 
   @Override
   public void periodic() {

@@ -102,8 +102,8 @@ public class RobotContainer {
         configureBindings();
         NamedCommands.registerCommand("AimTurret", turret.aimTurret());
         NamedCommands.registerCommand("StopAimTurret", turret.stopAiming());
-        NamedCommands.registerCommand("RunShooter", scoringFactory.runShooter());
-        NamedCommands.registerCommand("StopShooter", scoringFactory.stopShooter());
+        NamedCommands.registerCommand("RunShooter", shooter.runShooter().andThen(scoringFactory.runShooter()));
+        NamedCommands.registerCommand("StopShooter", shooter.stopShooter().andThen(scoringFactory.stopShooter()));
         NamedCommands.registerCommand("RunIntake", intake.runIntake());
         NamedCommands.registerCommand("StopIntake", intake.stopIntake());
         NamedCommands.registerCommand("RunOuttake", new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
@@ -150,16 +150,19 @@ public class RobotContainer {
         // xboxController
         xboxController.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
 
-        xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
+        xboxController.b().onTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
         xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), elevator.stopElevator()));
 
-        xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
+        xboxController.rightTrigger().onTrue(scoringFactory.runShooter());
         xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
 
-        xboxController.leftTrigger().whileTrue(intake.runIntake());
+        xboxController.leftTrigger().onTrue(intake.runIntake());
         xboxController.leftTrigger().onFalse(intake.stopIntake());
 
         xboxController.povDown().onTrue(turret.aimTurret());
+
+        xboxController.povRight().onTrue(shooter.runShooter());
+        xboxController.povLeft().onTrue(shooter.stopShooter());
 
         /* // Testing Commands
         xboxController.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
@@ -185,11 +188,14 @@ public class RobotContainer {
         xKeys.getButton(2).whileTrue(elevator.runElevator(Constants.ElevatorConstants.ELEVATOR_SPEED));
         xKeys.getButton(2).onFalse(elevator.stopElevator());
 
-        xKeys.getButton(1).whileTrue(shooter.runShooter(Constants.ShooterConstants.SHOOTER_SPEED));
+        xKeys.getButton(1).whileTrue(shooter.runShooter());
         xKeys.getButton(1).onFalse(shooter.stopShooter());
 
         xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());
         xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
+
+        xKeys.getButton(13).onTrue(shooter.runShooter());
+        xKeys.getButton(8).onTrue(shooter.stopShooter());
 
         /* // Trigger + Climber
         climber.setDefaultCommand(climber.setClimberSpeed());

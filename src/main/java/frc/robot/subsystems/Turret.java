@@ -81,7 +81,7 @@ public class Turret extends SubsystemBase {
 
     if (isAiming) {
       turretMath.calculateTarget(isRedAlliance, drivetrain);
-      setYaw(-(robotPose.getRotation().getDegrees() + 90) + turretMath.turretAngle);
+      setYaw(-(robotPose.getRotation().getDegrees() - 90) + turretMath.turretAngle);
     }
   }
 }
