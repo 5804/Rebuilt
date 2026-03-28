@@ -285,12 +285,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     @Override
     public void periodic() {
         boolean teamFlip = RobotContainer.isRedAlliance;
-        double rotationAngle = (teamFlip ? 180 : 0) + m_gyro.getYaw().getValueAsDouble();
+        // double rotationAngle = (teamFlip ? 180 : 0) + m_gyro.getYaw().getValueAsDouble();
         field.setRobotPose(this.getState().Pose);
         
         SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
         SmartDashboard.putNumber("Odometry Y", getState().Pose.getY());
-        SmartDashboard.putNumber("Angle", rotationAngle);
+        // SmartDashboard.putNumber("Angle", rotationAngle);
         SmartDashboard.putNumber("VX", getState().Speeds.vxMetersPerSecond);
         SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
         SmartDashboard.putNumber("Shooter Velocity (RPS)", Constants.ShooterConstants.SHOOTER_SPEED);
@@ -314,7 +314,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
                 SmartDashboard.putNumber("CurrentRotation", (teamFlip ? 180 : 0) + getState().Pose.getRotation().getDegrees());
                 SmartDashboard.putNumber("Currently Visible Tag", NetworkTableInstance.getDefault().getTable(ll).getEntry("tid").getDouble(0.0));
-                
+
                 boolean rejectUpdate = false;
                 if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)) {
                     rejectUpdate = true;
