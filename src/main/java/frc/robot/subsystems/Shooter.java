@@ -9,11 +9,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import frc.robot.Constants;
+import frc.robot.TurretMath;
 
 public class Shooter extends SubsystemBase {
   public TalonFX rightShooterMotor;
   public TalonFX leftShooterMotor;
-  public double rps = 0;
   public boolean isRunning = false;
   public boolean isReversing = false;
 
@@ -44,15 +44,15 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     if (isRunning) {
-      leftShooterMotor.setControl(velocityRequest.withVelocity(rps).withFeedForward(.5));
+      leftShooterMotor.setControl(velocityRequest.withVelocity(TurretMath.turretRPS).withFeedForward(.5));
     } else if (isReversing) {
-      leftShooterMotor.setControl(velocityRequest.withVelocity(-rps).withFeedForward(.5));
+      leftShooterMotor.setControl(velocityRequest.withVelocity(-TurretMath.turretRPS).withFeedForward(.5));
     }
   }
 
-  public Command runShooter(double rps) { return runOnce(() -> { isRunning = true;  isReversing = false; this.rps = rps; }); }
-  public Command reverseShooter(double rps) { return runOnce(() -> { isRunning = false; isReversing = true;  this.rps = rps; }); }
-  public Command stopShooter() { return runOnce(() -> { isRunning = false; isReversing = false;  this.rps = 0; leftShooterMotor.set(0); }); }
+  public Command runShooter() { return runOnce(() -> { isRunning = true;  isReversing = false; }); }
+  public Command reverseShooter() { return runOnce(() -> { isRunning = false; isReversing = true; }); }
+  public Command stopShooter() { return runOnce(() -> { isRunning = false; isReversing = false; leftShooterMotor.set(0); }); }
 
   public Command increaseShooterSpeed() { return run(() -> Constants.ShooterConstants.SHOOTER_SPEED += 0.1); }
   public Command decreaseShooterSpeed() { return run(() -> Constants.ShooterConstants.SHOOTER_SPEED -= 0.1); }

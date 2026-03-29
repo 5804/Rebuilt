@@ -35,7 +35,7 @@ public class Turret extends SubsystemBase {
     talonFXConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
     var slot0Configs = talonFXConfigs.Slot0;
-    slot0Configs.kP = 12;
+    slot0Configs.kP = 14;
     slot0Configs.kI = 0;
     slot0Configs.kD = 0.35;
     slot0Configs.kS = 0.0;

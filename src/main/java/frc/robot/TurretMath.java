@@ -93,8 +93,8 @@ public class TurretMath {
                         distanceToExitVelocity(actualDistance, hubDz));
     }
 
-    double[][] redZones = { { 11.665394, 4.0, 1.75 }, { 15.4/* 15.0 */, 6.5, 0 }, { 15.4/* 15.0 */, 1.7, 0 } };
-    double[][] blueZones = { { 4.875594, 4.0, 1.75 }, { 1.1/* 1.5 */, 1.7, 0 }, { 1.1/* 1.5 */, 6.5, 0 } };
+    public static double[][] redZones = { { 11.937, 4.0, 1.75 }, { 15.4/* 15.0 */, 6.5, 0 }, { 15.4/* 15.0 */, 1.7, 0 } };
+    public static double[][] blueZones = { { 4.619, 4.0, 1.75 }, { 1.1/* 1.5 */, 1.7, 0 }, { 1.1/* 1.5 */, 6.5, 0 } };
     
     public void calculateTarget(boolean isRedAlliance, CommandSwerveDrivetrain drivetrain) {
         double[][] zones = isRedAlliance ? redZones : blueZones;

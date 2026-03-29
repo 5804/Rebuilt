@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
+import frc.robot.TurretMath;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -293,6 +294,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // SmartDashboard.putNumber("Angle", rotationAngle);
         SmartDashboard.putNumber("VX", getState().Speeds.vxMetersPerSecond);
         SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
+        SmartDashboard.putString("Hub Pos", TurretMath.blueZones[0][0] + " | " + TurretMath.redZones[0][0]);
         SmartDashboard.putNumber("Shooter Velocity (RPS)", Constants.ShooterConstants.SHOOTER_SPEED);
         if (maxVel < Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2))))
             maxVel = Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2)));
@@ -309,10 +311,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         for (String ll : limelights) {
-                LimelightHelpers.SetRobotOrientation(ll, (teamFlip ? 180 : 0) + getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-                LimelightHelpers.PoseEstimate mt2 = teamFlip ? LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(ll) : LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
+                LimelightHelpers.SetRobotOrientation(ll, getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+                LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
 
-                SmartDashboard.putNumber("CurrentRotation", (teamFlip ? 180 : 0) + getState().Pose.getRotation().getDegrees());
                 SmartDashboard.putNumber("Currently Visible Tag", NetworkTableInstance.getDefault().getTable(ll).getEntry("tid").getDouble(0.0));
 
                 boolean rejectUpdate = false;
@@ -325,7 +326,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 }
 
                 if (!rejectUpdate) {
-                    setVisionMeasurementStdDevs(VecBuilder.fill(.1, .1, Math.toRadians(20)));
+                    setVisionMeasurementStdDevs(VecBuilder.fill(.1, .15, Math.toRadians(360)));
                     addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
                 }
         }
