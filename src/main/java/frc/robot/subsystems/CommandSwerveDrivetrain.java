@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
+import frc.robot.TurretMath;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -293,7 +294,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Angle", rotationAngle);
         SmartDashboard.putNumber("VX", getState().Speeds.vxMetersPerSecond);
         SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
-        SmartDashboard.putNumber("Shooter Velocity (RPS)", Constants.ShooterConstants.SHOOTER_SPEED);
+        SmartDashboard.putNumber("Shooter Velocity (RPS)", TurretMath.turretRPS);
         if (maxVel < Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2))))
             maxVel = Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2)));
         SmartDashboard.putNumber("Max Veocity", maxVel);

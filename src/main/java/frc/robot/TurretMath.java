@@ -4,13 +4,16 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 public class TurretMath {
 
-    public static double turretAngle = 0;
-    public static double turretRPS = 0;
+    public static double turretAngle = 0; // Degrees
+    public static double turretRPS = 0; // Revolutions per second
 
     public static double targetY = 4.034663;
     public static double targetX;
     public static double targetZ = 1.75;
 
+    // Hub Height = 1.75 Meters
+
+    // Shooter offset from robot center (meters)
     private static final double OFFSET_X = -0.25;
     private static final double OFFSET_Y = 0.0;
     private static final double OFFSET_Z = 0.7112;
@@ -90,10 +93,9 @@ public class TurretMath {
                         distanceToExitVelocity(actualDistance, hubDz));
     }
 
-    public static double[][] redZones = { { 11.665394, 4.0, 1.75 }, { 15.4/* 15.0 */, 6.5, 0 },
+    public static double[][] redZones = { { 11.937, 4.0, 1.75 }, { 15.4/* 15.0 */, 6.5, 0 },
             { 15.4/* 15.0 */, 1.7, 0 } };
-    public static double[][] blueZones = { { 4.875594, 4.0, 1.75 }, { 1.1/* 1.5 */, 1.7, 0 }, // move this stuff to constants later (im lazy rn)
-            { 1.1/* 1.5 */, 6.5, 0 } };
+    public static double[][] blueZones = { { 4.619, 4.0, 1.75 }, { 1.1/* 1.5 */, 1.7, 0 }, { 1.1/* 1.5 */, 6.5, 0 } }; // make constant at some point
 
     public static void calculateTarget(boolean isRedAlliance, CommandSwerveDrivetrain drivetrain) {
         double[][] zones = isRedAlliance ? redZones : blueZones;

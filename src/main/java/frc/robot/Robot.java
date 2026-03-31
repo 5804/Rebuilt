@@ -56,9 +56,27 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
 
-        if (!ShooterState.ReachedSpeed && shooter.leftShooterMotor.getVelocity()
+        SmartDashboard.putBoolean("Elevator Running", ElevatorState.Running);
+        SmartDashboard.putBoolean("Elevator RS", ElevatorState.Reversing);
+        SmartDashboard.putBoolean("Elevator Unjam", ElevatorState.Unjamming);
+        SmartDashboard.putBoolean("Elevator RS", ElevatorState.ReachedSpeed);
+        SmartDashboard.putBoolean("Elevator Manual", ElevatorState.Manual);
+
+        SmartDashboard.putBoolean("Indexer Running", IndexerState.Running);
+        SmartDashboard.putBoolean("Indexer RS", IndexerState.Reversing);
+        SmartDashboard.putBoolean("Indexer Unjam", IndexerState.Unjamming);
+        SmartDashboard.putBoolean("Indexer RS", IndexerState.ReachedSpeed);
+        SmartDashboard.putBoolean("Indexer Manual", IndexerState.Manual);
+
+        SmartDashboard.putBoolean("Shooter Running", ShooterState.Running);
+        SmartDashboard.putBoolean("Shooter RS", ShooterState.Reversing);
+        SmartDashboard.putBoolean("Shooter RS", ShooterState.ReachedSpeed);
+        SmartDashboard.putBoolean("Shooter Manual", ShooterState.Manual);
+
+        if (ShooterState.Running && shooter.leftShooterMotor.getVelocity()
                 .getValueAsDouble() > TurretMath.turretRPS - (TurretMath.turretRPS * 0.03))
             ShooterState.ReachedSpeed = true;
+        else ShooterState.ReachedSpeed = false;
 
         if (ShooterState.Running) {
             shooter.leftShooterMotor.setControl(shooterVelReq.withVelocity(TurretMath.turretRPS).withFeedForward(.5));
@@ -136,12 +154,15 @@ public class Robot extends TimedRobot {
         }
 
         Pose2d turretPose = robotPose.transformBy(new Transform2d(new Translation2d(-.25, 0), new Rotation2d()));
+
         int teamNum = RobotContainer.isRedAlliance ? 0 : 1;
         SmartDashboard.putNumber("Dist from Hub",
-                Math.hypot(turretPose.getX() - Constants.GlobalConstants.hubPositions[teamNum][0],
-                        turretPose.getY() - Constants.GlobalConstants.hubPositions[teamNum][1]));
+                Math.sqrt(Math.pow((turretPose.getX() - Constants.GlobalConstants.hubPositions[teamNum][0]), 2)
+                        + Math.pow((turretPose.getY() - Constants.GlobalConstants.hubPositions[teamNum][1]), 2)));
+
         TurretMath.calculateTurretMath(robotPose.getX(), robotPose.getY(), robotPose.getRotation().getRadians(),
                 drivetrain.getState().Speeds.vxMetersPerSecond, drivetrain.getState().Speeds.vyMetersPerSecond);
+
     }
 
     @Override
@@ -160,7 +181,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {} 
 
     @Override
     public void autonomousExit() {}
@@ -171,7 +192,7 @@ public class Robot extends TimedRobot {
         systemFactory.stopSystem();
         CommandScheduler.getInstance().cancelAll();
         shooter.runShooter(false);
-        turret.aimTurret();
+        // turret.aimTurret();
     }
 
     @Override
