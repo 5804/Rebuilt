@@ -65,6 +65,16 @@ public final class Constants {
     }
 
     public final class GlobalConstants {
-        public static final double[][] hubPositions = { { 4.625594, 4 }, { 11.665394, 4 } };
+        public static final double[][] hubPositions = { { 4.619, 4, 1.75 }, { 11.937, 4, 1.75 } };
+        public static final double[][][] passingPositions = {
+                                                                { // Blue
+                                                                    { 1.1, 1.7, 0 }, // Right
+                                                                    { 1.1, 6.5, 0 } // Left
+                                                                },
+                                                                { // Red
+                                                                    { 15.4, 6.5, 0 }, // Right
+                                                                    { 15.4, 1.7, 0 } // Left
+                                                                }
+                                                            };
     }
 }
