@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
         m_timeAndJoystickReplay.update();
         CommandScheduler.getInstance().run();
 
-        if (!ShooterState.ReachedSpeed || shooter.leftShooterMotor.getVelocity()
+        if (!ShooterState.ReachedSpeed && shooter.leftShooterMotor.getVelocity()
                 .getValueAsDouble() > TurretMath.turretRPS - (TurretMath.turretRPS * 0.03))
             ShooterState.ReachedSpeed = true;
 
@@ -66,28 +66,29 @@ public class Robot extends TimedRobot {
             shooter.leftShooterMotor.setControl(shooterVelReq.withVelocity(-TurretMath.turretRPS).withFeedForward(.5));
         }
 
+        double elevatorVel = Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble());
         if (ElevatorState.Running) {
             if (ElevatorState.Manual) {
                 elevator.elevatorMotor.set(ElevatorConstants.ELEVATOR_SPEED);
             } else if (ShooterState.ReachedSpeed) {
                 if (ElevatorState.Unjamming) {
                     elevator.elevatorMotor.set(TurretMath.turretRPS / 100);
-                    if (Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble()) >= TurretMath.turretRPS / 100
+                    if (elevatorVel >= TurretMath.turretRPS / 100
                             * 0.90) {
                         ElevatorState.Unjamming = false;
                         ElevatorState.ReachedSpeed = false;
                     }
                 } else if (!ElevatorState.ReachedSpeed) {
                     elevator.elevatorMotor.set(-TurretMath.turretRPS / 100);
-                    if (Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble()) < TurretMath.turretRPS / 100
+                    if (elevatorVel < TurretMath.turretRPS / 100
                             * 0.50) {
                         ElevatorState.Unjamming = true;
-                    } else if (Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble()) >= TurretMath.turretRPS
+                    } else if (elevatorVel >= TurretMath.turretRPS
                             / 100 * 0.90) {
                         ElevatorState.ReachedSpeed = true;
                     }
                 } else {
-                    if (Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble()) < TurretMath.turretRPS / 100
+                    if (elevatorVel < TurretMath.turretRPS / 100
                             * 0.30) {
                         ElevatorState.Unjamming = true;
                     } else {
@@ -99,19 +100,20 @@ public class Robot extends TimedRobot {
             elevator.elevatorMotor.set(-ElevatorConstants.ELEVATOR_SPEED);
         }
 
+        double indexerVel = Math.abs(indexer.indexerMotor.getVelocity().getValueAsDouble());
         if (IndexerState.Running) {
             if (IndexerState.Manual) {
                 indexer.indexerMotor.set(IndexerConstants.INDEXER_SPEED);
             } else if (ShooterState.ReachedSpeed) {
                 if (IndexerState.Unjamming) {
                     indexer.indexerMotor.set(-IndexerConstants.INDEXER_SPEED);
-                    if (Math.abs(indexer.indexerMotor.getVelocity().getValueAsDouble()) >= Math
+                    if (indexerVel >= Math
                             .abs(IndexerConstants.INDEXER_SPEED) * 0.95) {
                         IndexerState.Unjamming = false;
                     }
                 } else {
                     indexer.indexerMotor.set(IndexerConstants.INDEXER_SPEED);
-                    if (Math.abs(indexer.indexerMotor.getVelocity().getValueAsDouble()) < Math
+                    if (indexerVel < Math
                             .abs(IndexerConstants.INDEXER_SPEED) * 0.30) {
                         IndexerState.Unjamming = true;
                     }
@@ -127,19 +129,17 @@ public class Robot extends TimedRobot {
             intake.intakeMotor.set(-IntakeConstants.INTAKE_SPEED);
         }
 
+        Pose2d robotPose = drivetrain.getState().Pose;
         if (TurretState.Aiming) {
             TurretMath.calculateTarget(RobotContainer.isRedAlliance, drivetrain);
-            turret.setYaw(-(drivetrain.getState().Pose.getRotation().getDegrees() + 90) + TurretMath.turretAngle);
+            turret.setYaw(-(robotPose.getRotation().getDegrees() + 90) + TurretMath.turretAngle);
         }
 
-        Pose2d robotPose = drivetrain.getState().Pose;
         Pose2d turretPose = robotPose.transformBy(new Transform2d(new Translation2d(-.25, 0), new Rotation2d()));
-
         int teamNum = RobotContainer.isRedAlliance ? 0 : 1;
         SmartDashboard.putNumber("Dist from Hub",
-                Math.sqrt(Math.pow((turretPose.getX() - Constants.GlobalConstants.hubPositions[teamNum][0]), 2)
-                        + Math.pow((turretPose.getY() - Constants.GlobalConstants.hubPositions[teamNum][1]), 2)));
-
+                Math.hypot(turretPose.getX() - Constants.GlobalConstants.hubPositions[teamNum][0],
+                        turretPose.getY() - Constants.GlobalConstants.hubPositions[teamNum][1]));
         TurretMath.calculateTurretMath(robotPose.getX(), robotPose.getY(), robotPose.getRotation().getRadians(),
                 drivetrain.getState().Speeds.vxMetersPerSecond, drivetrain.getState().Speeds.vyMetersPerSecond);
     }

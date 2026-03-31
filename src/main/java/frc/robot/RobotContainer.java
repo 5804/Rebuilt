@@ -170,21 +170,25 @@ public class RobotContainer {
         xKeys.getButton(14).onTrue(turret.aimTurret());
         xKeys.getButton(15).onTrue(aimTurretStop().andThen(turret.stopAiming()));
 
-        xKeys.getButton(19).whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(true)));
-        xKeys.getButton(19).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
+        xKeys.getButton(19).onTrue(systemFactory.runOuttake());
+        xKeys.getButton(19).onFalse(systemFactory.stopOuttake());
 
-        xKeys.getButton(21).onTrue(new InstantCommand(() -> { CommandScheduler.getInstance().cancelAll(); }));
+        xKeys.getButton(21).onTrue(
+                new InstantCommand(() -> {
+                    CommandScheduler.getInstance().cancelAll();
+                })
+                        .andThen(systemFactory.stopSystem()));
 
-        xKeys.getButton(3).whileTrue(indexer.runIndexer(true));
+        xKeys.getButton(3).onTrue(indexer.runIndexer(true));
         xKeys.getButton(3).onFalse(indexer.stopIndexer());
 
-        xKeys.getButton(2).whileTrue(elevator.runElevator(true));
+        xKeys.getButton(2).onTrue(elevator.runElevator(true));
         xKeys.getButton(2).onFalse(elevator.stopElevator());
 
-        xKeys.getButton(1).whileTrue(shooter.runShooter(true));
+        xKeys.getButton(1).onTrue(shooter.runShooter(true));
         xKeys.getButton(1).onFalse(shooter.stopShooter());
 
-        xKeys.getButton(16).whileTrue(systemFactory.reverseSystem());
+        xKeys.getButton(16).onTrue(systemFactory.reverseSystem());
         xKeys.getButton(16).onFalse(systemFactory.stopSystem());
 
         xKeys.getButton(13).onTrue(shooter.runShooter(true));
