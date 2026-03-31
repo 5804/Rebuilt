@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.5,
+        "y": 2.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.4681509474571595,
+        "y": 2.4609936976262987
+      },
+      "isLocked": false,
+      "linkedName": "VABLAmR1"
+    },
+    {
+      "anchor": {
+        "x": 5.869,
+        "y": 2.5
+      },
+      "prevControl": {
+        "x": 5.089752150326516,
+        "y": 2.5219982631990763
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "VABLAmR2"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.0,
+    "rotation": 45.0
+  },
+  "reversed": false,
+  "folder": "VABLA Middle Right Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 45.0
+  },
+  "useDefaultConstraints": false
+}

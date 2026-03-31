@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.0,
+        "y": 2.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.923291592128802,
+        "y": 2.451323792486584
+      },
+      "isLocked": false,
+      "linkedName": "VABLARight2"
+    },
+    {
+      "anchor": {
+        "x": 6.423,
+        "y": 4.124239713774597
+      },
+      "prevControl": {
+        "x": 6.939516994633274,
+        "y": 3.248067978533095
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "VABLARight3"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.0,
+    "rotation": -23.96248897457824
+  },
+  "reversed": false,
+  "folder": "VABLA Right Paths",
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": 45.0
+  },
+  "useDefaultConstraints": false
+}
