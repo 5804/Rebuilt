@@ -84,7 +84,7 @@ public class RobotContainer {
         return -1 * joystick.getRawAxis(1) * climbTriggerHeld;
     });
 
-    SystemFactory systemFactory = new SystemFactory(shooter, elevator, indexer, intake, drivetrain);
+    public final SystemFactory systemFactory = new SystemFactory(shooter, elevator, indexer, intake, drivetrain);
 
     private final SendableChooser<Command> autoChooser = new SendableChooser<>();
     private ShuffleboardTab tab1 = Shuffleboard.getTab("Tab1");

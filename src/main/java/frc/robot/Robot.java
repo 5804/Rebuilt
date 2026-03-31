@@ -17,12 +17,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.StateEnums.*;
 import frc.robot.Constants.*;
-import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Turret;
+import frc.robot.subsystems.*;
+import frc.robot.commandfactories.*;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -40,6 +36,7 @@ public class Robot extends TimedRobot {
     public final Shooter shooter;
     public final Intake intake;
     public final CommandSwerveDrivetrain drivetrain;
+    public final SystemFactory systemFactory;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
@@ -49,6 +46,7 @@ public class Robot extends TimedRobot {
         this.shooter = m_robotContainer.shooter;
         this.intake = m_robotContainer.intake;
         this.drivetrain = RobotContainer.drivetrain;
+        this.systemFactory = m_robotContainer.systemFactory;
     }
 
     private final VelocityVoltage shooterVelReq = new VelocityVoltage(0).withSlot(0);
@@ -169,7 +167,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        // if (m_autonomousCommand != null) { CommandScheduler.getInstance().cancel(m_autonomousCommand); }
+        StateEnums.TurretState.Aiming = false;
+        systemFactory.stopSystem();
         CommandScheduler.getInstance().cancelAll();
         shooter.runShooter(false);
         turret.aimTurret();
