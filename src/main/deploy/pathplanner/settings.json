@@ -3,14 +3,16 @@
   "robotLength": 0.862,
   "holonomicMode": true,
   "pathFolders": [
-    "VABLA Middle Right Paths",
+    "CHCMP Left Paths",
     "Testing Paths",
     "VABLA Middle Left Paths",
+    "VABLA Middle Right Paths",
     "VABLA Right Paths"
   ],
   "autoFolders": [
-    "VABLA Middle Autos",
+    "CHCMP Left Autos",
     "Testing Paths",
+    "VABLA Middle Autos",
     "VABLA Right Autos"
   ],
   "defaultMaxVel": 3.0,

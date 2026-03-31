@@ -1,0 +1,55 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CHCMPLeft1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunIntake"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CHCMPLeft2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CHCMPLeft3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopIntake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimTurret"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunShooter"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "CHCMP Left Autos",
+  "choreoAuto": false
+}

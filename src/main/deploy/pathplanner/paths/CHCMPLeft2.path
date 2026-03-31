@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.562,
+        "y": 6.976512866015971
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.567873766527689,
+        "y": 4.71443049898142
+      },
+      "isLocked": false,
+      "linkedName": "CHCMPLeft1"
+    },
+    {
+      "anchor": {
+        "x": 7.562,
+        "y": 4.62652173912666
+      },
+      "prevControl": {
+        "x": 7.573788557675922,
+        "y": 6.693149738765413
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "CHCMPLeft2"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "CHCMP Left Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": false
+}
