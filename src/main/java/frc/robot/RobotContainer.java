@@ -109,6 +109,7 @@ public class RobotContainer {
         autoChooser.addOption("Middle Right", VABLAmR());
         autoChooser.addOption("Right Side", VABLARight());
         autoChooser.addOption("Right Passing", VABLARightPassing());
+        autoChooser.addOption("Left Insta Mid", CHCMPLeft());
 
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
@@ -221,4 +222,5 @@ public class RobotContainer {
     public Command VABLAmL() { return new PathPlannerAuto("VABLAmL"); }
     public Command VABLARight() { return new PathPlannerAuto("VABLARight"); }
     public Command VABLARightPassing() { return new PathPlannerAuto("VABLARightPassing"); }
+    public Command CHCMPLeft() { return new PathPlannerAuto("CHCMP Left"); }
 }
