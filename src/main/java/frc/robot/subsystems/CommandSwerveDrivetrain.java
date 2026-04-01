@@ -285,8 +285,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     @Override
     public void periodic() {
-        boolean teamFlip = RobotContainer.isRedAlliance;
-        // double rotationAngle = (teamFlip ? 180 : 0) + m_gyro.getYaw().getValueAsDouble();
         field.setRobotPose(this.getState().Pose);
         
         SmartDashboard.putNumber("Odometry X", getState().Pose.getX());
@@ -312,21 +310,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         for (String ll : limelights) {
                 LimelightHelpers.SetRobotOrientation(ll, getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-                LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue(ll);
+                LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(ll);
 
-                SmartDashboard.putNumber("Currently Visible Tag", NetworkTableInstance.getDefault().getTable(ll).getEntry("tid").getDouble(0.0));
+                double minTags = 1;
+                double minDist = 1;
+                double minAngularVel = 360;
 
-                boolean rejectUpdate = false;
-                if (Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(360)) {
-                    rejectUpdate = true;
-                }
-
-                if (mt2.tagCount < 2) {
-                    rejectUpdate = true;
-                }
+                boolean rejectUpdate = Math.abs(getState().Speeds.omegaRadiansPerSecond) > Math.toRadians(minAngularVel) ||
+                                        mt2.tagCount < minTags ||
+                                        mt2.avgTagDist < minDist;
 
                 if (!rejectUpdate) {
-                    setVisionMeasurementStdDevs(VecBuilder.fill(.1, .15, Math.toRadians(360)));
+                    setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, Constants.GlobalConstants.PlaceholderRadianVal)); // .1, .15, 360
                     addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
                 }
         }

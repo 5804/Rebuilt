@@ -46,4 +46,7 @@ public final class Constants {
         public static final double climberOffsetMagnitudeX = .1;
         public static final double climberOffsetMagnitudeY = .1;
     }
+    public final class GlobalConstants {
+        public static final double PlaceholderRadianVal = Math.toRadians(9999999);
+    }
 }
