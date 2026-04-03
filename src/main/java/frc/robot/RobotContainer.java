@@ -7,18 +7,14 @@ package frc.robot;
 import static edu.wpi.first.units.Units.*;
 
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.fasterxml.jackson.databind.util.Named;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -30,20 +26,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.commandfactories.ScoringFactory;
-import frc.robot.TurretMath;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
-import frc.robot.ButtonBoard;;
 
 public class RobotContainer {
     private static final double MaxSpeed = 1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
@@ -66,14 +56,14 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.005).withRotationalDeadband(MaxAngularRate * 0.005) // Add a 20% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
             
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+    // private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+    // private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController xboxController = new CommandXboxController(0);
     private final ButtonBoard xKeys = new ButtonBoard(21, 1);
-    private final Joystick joystick = new Joystick(2);
+    // private final Joystick joystick = new Joystick(2);
     
     public int climbTriggerHeld = 0;
 
@@ -117,7 +107,6 @@ public class RobotContainer {
 
         SmartDashboard.putData("Auto choices", autoChooser);
         tab1.add("Auto Chooser", autoChooser);
-
         LimelightHelpers.setCameraPose_RobotSpace("limelight-front", 0.28, 0.28, 0.21, 0, 30, 0);
         LimelightHelpers.setPipelineIndex("limelight-front", 0);
 
@@ -164,8 +153,8 @@ public class RobotContainer {
         xboxController.povRight().onTrue(shooter.runShooter());
         xboxController.povLeft().onTrue(shooter.stopShooter());
 
-        xboxController.y().onTrue(new InstantCommand(() -> { turretMath.blueZones[0][0] += .25;  turretMath.redZones[0][0] += .25; }));
-        xboxController.x().onTrue(new InstantCommand(() -> { turretMath.blueZones[0][0] -= .25;  turretMath.redZones[0][0] -= .25; }));
+        xboxController.y().onTrue(new InstantCommand(() -> { TurretMath.blueZones[0][0] += .25;  TurretMath.redZones[0][0] += .25; }));
+        xboxController.x().onTrue(new InstantCommand(() -> { TurretMath.blueZones[0][0] -= .25;  TurretMath.redZones[0][0] -= .25; }));
 
         /* // Testing Commands
         xboxController.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
@@ -180,22 +169,25 @@ public class RobotContainer {
         xKeys.getButton(14).onTrue(turret.aimTurret());
         xKeys.getButton(15).onTrue(aimTurretStop().andThen(turret.stopAiming()));
 
-        xKeys.getButton(19).whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
+        xKeys.getButton(19).onTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
         xKeys.getButton(19).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
         xKeys.getButton(21).onTrue(new InstantCommand(() -> {CommandScheduler.getInstance().cancelAll();}));
 
-        xKeys.getButton(3).whileTrue(indexer.runIndexer());
+        xKeys.getButton(3).onTrue(indexer.runIndexer());
         xKeys.getButton(3).onFalse(indexer.stopIndexer());
 
-        xKeys.getButton(2).whileTrue(elevator.runElevator(Constants.ElevatorConstants.ELEVATOR_SPEED));
+        xKeys.getButton(2).onTrue(elevator.runElevator(Constants.ElevatorConstants.ELEVATOR_SPEED));
         xKeys.getButton(2).onFalse(elevator.stopElevator());
 
-        xKeys.getButton(1).whileTrue(shooter.runShooter());
+        xKeys.getButton(1).onTrue(shooter.runShooter());
         xKeys.getButton(1).onFalse(shooter.stopShooter());
 
-        xKeys.getButton(16).whileTrue(scoringFactory.reverseSystem());
+        xKeys.getButton(16).onTrue(scoringFactory.reverseSystem());
         xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
+
+        xKeys.getButton(9).onTrue(elevator.ElevatorVLimitUp());
+        xKeys.getButton(4).onTrue(elevator.ElevatorVLimitDown());
 
         /* // Trigger + Climber
         climber.setDefaultCommand(climber.setClimberSpeed());
