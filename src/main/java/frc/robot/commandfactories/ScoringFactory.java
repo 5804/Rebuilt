@@ -42,7 +42,7 @@ public class ScoringFactory extends SubsystemBase {
   @Override
   public void periodic() {
     if (isShooting) {
-      double rps = turretMath.turretRPS;
+      double rps = TurretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       // shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
 
@@ -88,7 +88,7 @@ public class ScoringFactory extends SubsystemBase {
         }
       }
     } else if (isReversing) {
-      double rps = -turretMath.turretRPS;
+      double rps = -TurretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       // shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
       elevator.elevatorMotor.set(-rps / 100);

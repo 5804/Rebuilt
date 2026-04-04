@@ -11,6 +11,8 @@ import frc.robot.Constants;
 import frc.robot.TurretMath;
 import com.ctre.phoenix6.hardware.*;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -47,6 +49,8 @@ public class Turret extends SubsystemBase {
     motionMagicConfigs.MotionMagicAcceleration = 1000;
     motionMagicConfigs.MotionMagicJerk = 10000;
 
+    yawMotor.setNeutralMode(NeutralModeValue.Brake);
+    
     yawMotor.getConfigurator().apply(talonFXConfigs);
     yawMotor.setPosition(0 / 360);
   }
@@ -81,7 +85,7 @@ public class Turret extends SubsystemBase {
 
     if (isAiming) {
       turretMath.calculateTarget(isRedAlliance, drivetrain);
-      setYaw(-(robotPose.getRotation().getDegrees() + 90) + turretMath.turretAngle);
+      setYaw(-(robotPose.getRotation().getDegrees() + 90) + TurretMath.turretAngle);
     }
   }
 }
