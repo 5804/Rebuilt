@@ -39,6 +39,10 @@ public class ScoringFactory extends SubsystemBase {
     this.turretMath = t;
   }
 
+  double elvPosInit = 0;
+  double indPosInit = 0;
+  double unjamRot = 3;
+
   @Override
   public void periodic() {
     if (isShooting) {
@@ -54,38 +58,96 @@ public class ScoringFactory extends SubsystemBase {
         double indexerVel = Math.abs(indexer.indexerMotor.getVelocity().getValueAsDouble());
         double targetIndexerRps = Math.abs(Constants.IndexerConstants.INDEXER_SPEED);
 
-        if (elevatorUnjamming) {
-          elevator.elevatorMotor.set(rps / 100);
-          if (elevatorVel >= targetElevatorRps * 0.90) {
+        // double ElvRps = Math.max((45 / rps) * (Math.abs(rps)), Math.min((100 / rps) *
+        // (Math.abs(rps)), rps)); // Min 45 rps and max 100 rps
+
+        // if (elevatorUnjamming) {
+        // elevator.elevatorMotor.set(rps / 50);
+        // // if (elevatorVel >= targetElevatorRps * 0.90) {
+        // if (Math.abs(elvPosInit -
+        // elevator.elevatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
+        // elvPosInit = 0;
+        // elevatorUnjamming = false;
+        // elevatorToSpeed = false;
+        // }
+        // } else if (!elevatorToSpeed) {
+        // elevator.elevatorMotor.set(-rps / 100);
+        // if (elevatorVel < targetElevatorRps * 0.50) {
+        // elevatorUnjamming = true;
+        // } else if (elevatorVel >= targetElevatorRps * 0.90) {
+        // elevatorToSpeed = true;
+        // }
+        // } else {
+        // if (elevatorVel < targetElevatorRps * 0.30) {
+        // elvPosInit = elevator.elevatorMotor.getPosition().getValueAsDouble();
+        // elevatorUnjamming = true;
+        // } else {
+        // elevator.elevatorMotor.set(-rps / 100);
+        // }
+        // }
+
+        if (indexerUnjamming) {
+        // indexer.indexerMotor.set(-1); // -Constants.IndexerConstants.INDEXER_SPEED
+        // if (indexerVel >= targetIndexerRps * 0.95) {
+        if (Math.abs(indPosInit -
+        indexer.indexerMotor.getPosition().getValueAsDouble()) >= unjamRot) {
+        indPosInit = 0;
+        indexerUnjamming = false;
+        }
+        } else {
+        // indexer.indexerMotor.set(rps / 200);
+        if (indexerVel < targetIndexerRps * 0.05) {
+        indPosInit = indexer.indexerMotor.getPosition().getValueAsDouble();
+        indexerUnjamming = true;
+        }
+        }
+
+        // if (elevatorUnjamming) {
+        // indexer.indexerMotor.set(-rps / 100);
+        // elevator.elevatorMotor.set(rps / 50);
+        // // if (elevatorVel >= targetElevatorRps * 0.90) {
+        // if (Math.abs(elvPosInit -
+        // elevator.elevatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
+        // elvPosInit = 0;
+        // elevatorUnjamming = false;
+        // elevatorToSpeed = false;
+        // }
+        // } else if (!elevatorToSpeed) {
+        // indexer.indexerMotor.set(rps / 200);
+        // elevator.elevatorMotor.set(-rps / 100);
+        // if (elevatorVel < targetElevatorRps * 0.50) {
+        // elevatorUnjamming = true;
+        // } else if (elevatorVel >= targetElevatorRps * 0.90) {
+        // elevatorToSpeed = true;
+        // }
+        // } else {
+        // if (elevatorVel < targetElevatorRps * 0.05) {
+        // elvPosInit = elevator.elevatorMotor.getPosition().getValueAsDouble();
+        // elevatorUnjamming = true;
+        // } else {
+        // indexer.indexerMotor.set(rps / 200);
+        // elevator.elevatorMotor.set(-rps / 100);
+        // }
+        // }
+
+        if (elevatorUnjamming || indexerUnjamming) {
+          indexer.indexerMotor.set(-rps / 100);
+          elevator.elevatorMotor.set(rps / 50);
+          if (Math.abs(elvPosInit - elevator.elevatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
+            elvPosInit = 0;
             elevatorUnjamming = false;
             elevatorToSpeed = false;
           }
-        } else if (!elevatorToSpeed) {
-          elevator.elevatorMotor.set(-rps / 100);
-          if (elevatorVel < targetElevatorRps * 0.50) {
-            elevatorUnjamming = true;
-          } else if (elevatorVel >= targetElevatorRps * 0.90) {
-            elevatorToSpeed = true;
-          }
         } else {
-          if (elevatorVel < targetElevatorRps * 0.30) {
+          indexer.indexerMotor.set(rps / 200);
+          elevator.elevatorMotor.set(-rps / 100);
+
+          if (elevatorVel < targetElevatorRps * 0.05) {
+            elvPosInit = elevator.elevatorMotor.getPosition().getValueAsDouble();
             elevatorUnjamming = true;
-          } else {
-            elevator.elevatorMotor.set(-rps / 100);
           }
         }
 
-        if (indexerUnjamming) {
-          indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
-          if (indexerVel >= targetIndexerRps * 0.95) {
-            indexerUnjamming = false;
-          }
-        } else {
-          indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
-          if (indexerVel < targetIndexerRps * 0.30) {
-            indexerUnjamming = true;
-          }
-        }
       }
     } else if (isReversing) {
       double rps = -TurretMath.turretRPS;

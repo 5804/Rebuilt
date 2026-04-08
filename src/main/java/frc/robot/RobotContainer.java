@@ -146,8 +146,8 @@ public class RobotContainer {
         xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
         xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
 
-        xboxController.leftTrigger().whileTrue(intake.runIntake());
-        xboxController.leftTrigger().onFalse(intake.stopIntake());
+        xboxController.leftTrigger().whileTrue(intake.runIntake().alongWith(indexer.runIndexer()).alongWith(elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED))); //edit HERE
+        xboxController.leftTrigger().onFalse(intake.stopIntake().alongWith(indexer.stopIndexer()).alongWith(elevator.stopElevator()));
 
         xboxController.povDown().onTrue(turret.aimTurret());
         xboxController.povRight().onTrue(shooter.runShooter());
@@ -186,8 +186,8 @@ public class RobotContainer {
         xKeys.getButton(16).onTrue(scoringFactory.reverseSystem());
         xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
 
-        xKeys.getButton(9).onTrue(elevator.ElevatorVLimitUp());
-        xKeys.getButton(4).onTrue(elevator.ElevatorVLimitDown());
+        //xKeys.getButton(9).onTrue(elevator.ElevatorVLimitUp());
+        //xKeys.getButton(4).onTrue(elevator.ElevatorVLimitDown());
 
         /* // Trigger + Climber
         climber.setDefaultCommand(climber.setClimberSpeed());
