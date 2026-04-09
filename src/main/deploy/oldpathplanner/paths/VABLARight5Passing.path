@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.2580500894454385,
+        "y": 0.6682289803220032
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.905705089440373,
+        "y": 0.5208512190284723
+      },
+      "isLocked": false,
+      "linkedName": "VABLARight4"
+    },
+    {
+      "anchor": {
+        "x": 7.734561717352415,
+        "y": 1.3172450805008942
+      },
+      "prevControl": {
+        "x": 7.72457341275246,
+        "y": 0.6080754539040926
+      },
+      "nextControl": {
+        "x": 7.767012522361359,
+        "y": 3.6212522361359563
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.750787119856888,
+        "y": 3.6699284436493738
+      },
+      "prevControl": {
+        "x": 7.7021109123434695,
+        "y": 1.3334704830053656
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "VABLA Right Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}

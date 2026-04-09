@@ -292,7 +292,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // SmartDashboard.putNumber("Angle", rotationAngle);
         SmartDashboard.putNumber("VX", getState().Speeds.vxMetersPerSecond);
         SmartDashboard.putNumber("VY", getState().Speeds.vyMetersPerSecond);
-        SmartDashboard.putString("Hub Pos", TurretMath.blueZones[0][0] + " | " + TurretMath.redZones[0][0]);
+        SmartDashboard.putString("Hub Pos", TurretMath.BLUEZONES[0][0] + " | " + TurretMath.REDZONES[0][0]);
         SmartDashboard.putNumber("Shooter Velocity (RPS)", Constants.ShooterConstants.SHOOTER_SPEED);
         if (maxVel < Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2))))
             maxVel = Math.sqrt((Math.pow(getState().Speeds.vxMetersPerSecond, 2) + Math.pow(getState().Speeds.vyMetersPerSecond, 2)));

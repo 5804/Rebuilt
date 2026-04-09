@@ -1,0 +1,105 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.461,
+        "y": 2.52765625
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.341915178571428,
+        "y": 2.540706845238095
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.470647321428571,
+        "y": 2.528
+      },
+      "prevControl": {
+        "x": 5.2019313508653475,
+        "y": 2.5072065022778456
+      },
+      "nextControl": {
+        "x": 6.566897321428571,
+        "y": 2.612828869047619
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.586473214285714,
+        "y": 1.007261904761905
+      },
+      "prevControl": {
+        "x": 6.24606429077783,
+        "y": 1.166178100284298
+      },
+      "nextControl": {
+        "x": 6.870794195914271,
+        "y": 0.8745297535539012
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.734925595238096,
+        "y": 1.216071428571429
+      },
+      "prevControl": {
+        "x": 7.362983630952381,
+        "y": 0.674471726190477
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RightBump1"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.2094594594594579,
+      "rotationDegrees": 45.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.50821917808219,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Bump Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 45.0
+  },
+  "useDefaultConstraints": true
+}

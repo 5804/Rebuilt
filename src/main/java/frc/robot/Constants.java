@@ -13,7 +13,8 @@ public final class Constants {
     public final class IndexerConstants {
         public static final int INDEXER_MOTOR_ID = 52;
         public static final double INDEXER_SPEED = .6; // If going faster than .3, make sure wheels don't break robot
-        
+        public static final int AGITATOR_MOTOR_ID = 57;
+        public static final double AGITATOR_SPEED = .3; // Test var later I just set to same as indexer for now -Alex
     }
     public final class ShooterConstants {
         public static final int LEFT_SHOOTER_MOTOR_ID = 55;
