@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.0,
-        "y": 0.0
+        "x": 7.685885509838998,
+        "y": 4.627227191413238
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0,
-        "y": 0.0
+        "x": 6.912658195624429,
+        "y": 5.01119413902488
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "VABLAmL4"
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 0.0
+        "x": 5.869,
+        "y": 5.5
       },
       "prevControl": {
-        "x": 1.0,
-        "y": 1.2246467991473532e-16
+        "x": 7.4000640619488,
+        "y": 4.962310575981686
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "VABLAmL5"
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.0
+    "velocity": 2.0,
+    "rotation": -45.0
   },
   "reversed": false,
-  "folder": "Testing Paths",
+  "folder": "VABLA Middle Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

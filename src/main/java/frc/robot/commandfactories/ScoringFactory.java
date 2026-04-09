@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Shooter;
@@ -27,6 +28,8 @@ public class ScoringFactory extends SubsystemBase {
   boolean elevatorToSpeed = false;
   boolean elevatorUnjamming = false;
   boolean indexerUnjamming = false;
+  boolean agitatorUnjamming = false;
+
 
   final VelocityVoltage m_request = new VelocityVoltage(0).withSlot(0);
 
@@ -41,120 +44,100 @@ public class ScoringFactory extends SubsystemBase {
 
   double elvPosInit = 0;
   double indPosInit = 0;
-  double unjamRot = 3;
+  double agiPosInit = 0;
+
+  double unjamRot = 6;
+  double agitatorUnjamPercentThreshold = .1;
+  double indexerUnjamPercentThreshold = .05;
+
+
 
   @Override
   public void periodic() {
     if (isShooting) {
       double rps = TurretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
-      // shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
+      shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
 
       if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) {
+        // if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble()
+        // > .1) {
         reachedSpeed = true;
 
         double elevatorVel = Math.abs(elevator.elevatorMotor.getVelocity().getValueAsDouble());
         double targetElevatorRps = rps / 100;
         double indexerVel = Math.abs(indexer.indexerMotor.getVelocity().getValueAsDouble());
+        double agitatorVel = Math.abs(indexer.agitatorMotor.getVelocity().getValueAsDouble());
         double targetIndexerRps = Math.abs(Constants.IndexerConstants.INDEXER_SPEED);
+        double targetAgitatorSpeed = Math.abs(Constants.IndexerConstants.AGITATOR_SPEED);
 
-        // double ElvRps = Math.max((45 / rps) * (Math.abs(rps)), Math.min((100 / rps) *
-        // (Math.abs(rps)), rps)); // Min 45 rps and max 100 rps
 
+        // // Are we unjamming the elavator?
         // if (elevatorUnjamming) {
-        // elevator.elevatorMotor.set(rps / 50);
-        // // if (elevatorVel >= targetElevatorRps * 0.90) {
-        // if (Math.abs(elvPosInit -
-        // elevator.elevatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
-        // elvPosInit = 0;
-        // elevatorUnjamming = false;
-        // elevatorToSpeed = false;
-        // }
-        // } else if (!elevatorToSpeed) {
-        // elevator.elevatorMotor.set(-rps / 100);
-        // if (elevatorVel < targetElevatorRps * 0.50) {
-        // elevatorUnjamming = true;
-        // } else if (elevatorVel >= targetElevatorRps * 0.90) {
-        // elevatorToSpeed = true;
-        // }
+        //   // Has it done a the correct # of rotation?
+        //   if (Math.abs(elvPosInit - elevator.elevatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
+        //     elvPosInit = 0;
+        //     elevatorUnjamming = false;
+        //     elevatorToSpeed = false;
+        //   }
         // } else {
-        // if (elevatorVel < targetElevatorRps * 0.30) {
-        // elvPosInit = elevator.elevatorMotor.getPosition().getValueAsDouble();
-        // elevatorUnjamming = true;
-        // } else {
-        // elevator.elevatorMotor.set(-rps / 100);
-        // }
+        //   // Is the elevator currently jamming
+        //   if (elevatorVel < targetElevatorRps * unjamPercentThreshold) {
+        //     elvPosInit = elevator.elevatorMotor.getPosition().getValueAsDouble();
+        //     elevatorUnjamming = true;
+        //   }
         // }
 
+        //UNJAMMING CODE
+        // Are we unjamming the indexer?
         if (indexerUnjamming) {
-        // indexer.indexerMotor.set(-1); // -Constants.IndexerConstants.INDEXER_SPEED
-        // if (indexerVel >= targetIndexerRps * 0.95) {
-        if (Math.abs(indPosInit -
-        indexer.indexerMotor.getPosition().getValueAsDouble()) >= unjamRot) {
-        indPosInit = 0;
-        indexerUnjamming = false;
-        }
+          // Has it done a the correct # of rotation?
+          if (Math.abs(indPosInit - indexer.indexerMotor.getPosition().getValueAsDouble()) >= unjamRot) {
+            indPosInit = 0;
+            indexerUnjamming = false;
+          }
         } else {
-        // indexer.indexerMotor.set(rps / 200);
-        if (indexerVel < targetIndexerRps * 0.05) {
-        indPosInit = indexer.indexerMotor.getPosition().getValueAsDouble();
-        indexerUnjamming = true;
-        }
+          // Is the indexer currently jamming
+          if (indexerVel < targetIndexerRps * targetAgitatorSpeed) {
+            indPosInit = indexer.indexerMotor.getPosition().getValueAsDouble();
+            indexerUnjamming = true;
+          }
         }
 
-        // if (elevatorUnjamming) {
-        // indexer.indexerMotor.set(-rps / 100);
-        // elevator.elevatorMotor.set(rps / 50);
-        // // if (elevatorVel >= targetElevatorRps * 0.90) {
-        // if (Math.abs(elvPosInit -
-        // elevator.elevatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
-        // elvPosInit = 0;
-        // elevatorUnjamming = false;
-        // elevatorToSpeed = false;
-        // }
-        // } else if (!elevatorToSpeed) {
-        // indexer.indexerMotor.set(rps / 200);
-        // elevator.elevatorMotor.set(-rps / 100);
-        // if (elevatorVel < targetElevatorRps * 0.50) {
-        // elevatorUnjamming = true;
-        // } else if (elevatorVel >= targetElevatorRps * 0.90) {
-        // elevatorToSpeed = true;
-        // }
-        // } else {
-        // if (elevatorVel < targetElevatorRps * 0.05) {
-        // elvPosInit = elevator.elevatorMotor.getPosition().getValueAsDouble();
-        // elevatorUnjamming = true;
-        // } else {
-        // indexer.indexerMotor.set(rps / 200);
-        // elevator.elevatorMotor.set(-rps / 100);
-        // }
-        // }
+        // Are we unjamming the agitator?
+        if (agitatorUnjamming) {
+          // Has it done a the correct # of rotation?
+          if (Math.abs(agiPosInit - indexer.agitatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
+            agiPosInit = 0;
+            agitatorUnjamming = false;
+          }
+        } else {
+          // Is the indexer currently jamming
+          if (agitatorVel < targetAgitatorSpeed * agitatorUnjamPercentThreshold) {
+            agiPosInit = indexer.agitatorMotor.getPosition().getValueAsDouble();
+            agitatorUnjamming = true;
+          }
+        }
 
-        if (elevatorUnjamming || indexerUnjamming) {
+        elevator.elevatorMotor.set(-rps / 100);
+
+        // Unjam
+        if (indexerUnjamming || agitatorUnjamming) {
           indexer.indexerMotor.set(-rps / 100);
-          elevator.elevatorMotor.set(rps / 50);
-          if (Math.abs(elvPosInit - elevator.elevatorMotor.getPosition().getValueAsDouble()) >= unjamRot) {
-            elvPosInit = 0;
-            elevatorUnjamming = false;
-            elevatorToSpeed = false;
-          }
+          indexer.agitatorMotor.set(rps / 200);
+          // elevator.elevatorMotor.set(-rps / 400);
         } else {
-          indexer.indexerMotor.set(rps / 200);
-          elevator.elevatorMotor.set(-rps / 100);
-
-          if (elevatorVel < targetElevatorRps * 0.05) {
-            elvPosInit = elevator.elevatorMotor.getPosition().getValueAsDouble();
-            elevatorUnjamming = true;
-          }
+          indexer.indexerMotor.set(rps / 150);
+          indexer.agitatorMotor.set(-rps / 50);
+          // elevator.elevatorMotor.set(-rps / 50);
         }
 
       }
     } else if (isReversing) {
-      double rps = -TurretMath.turretRPS;
-      SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
-      // shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
-      elevator.elevatorMotor.set(-rps / 100);
-      indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
+      shooter.leftShooterMotor.set(-.5);
+      elevator.elevatorMotor.set(-.5);
+      indexer.indexerMotor.set(-.5);
+      indexer.agitatorMotor.set(-.5);
     }
   }
 
@@ -182,9 +165,10 @@ public class ScoringFactory extends SubsystemBase {
       indexerUnjamming = false;
       isShooting = false;
       isReversing = false;
-      // shooter.leftShooterMotor.set(0);
+      shooter.leftShooterMotor.set(0);
       elevator.elevatorMotor.set(0);
       indexer.indexerMotor.set(0);
+      indexer.agitatorMotor.set(0);
     }, shooter, elevator, indexer);
   }
 }

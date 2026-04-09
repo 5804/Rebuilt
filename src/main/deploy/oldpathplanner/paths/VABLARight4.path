@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.423,
+        "y": 4.124239713774597
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.517656529516995,
+        "y": 4.919284436493737
+      },
+      "isLocked": false,
+      "linkedName": "VABLARight3"
+    },
+    {
+      "anchor": {
+        "x": 7.586,
+        "y": 4.7732558139534875
+      },
+      "prevControl": {
+        "x": 7.153023562334198,
+        "y": 4.907945106703822
+      },
+      "nextControl": {
+        "x": 8.143954929078909,
+        "y": 4.599688505789235
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.205,
+        "y": 1.1063148479427547
+      },
+      "prevControl": {
+        "x": 7.367329577747666,
+        "y": 1.2964440360971894
+      },
+      "nextControl": {
+        "x": 6.730539474604054,
+        "y": 0.5506009986460902
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.2580500894454385,
+        "y": 0.6682289803220032
+      },
+      "prevControl": {
+        "x": 6.609241305028498,
+        "y": 0.7299814544683005
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "VABLARight4"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.2264529058116231,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 1.659318637274549,
+      "rotationDegrees": -135.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "VABLA Right Paths",
+  "idealStartingState": {
+    "velocity": 2.0,
+    "rotation": -23.96248897457824
+  },
+  "useDefaultConstraints": false
+}
