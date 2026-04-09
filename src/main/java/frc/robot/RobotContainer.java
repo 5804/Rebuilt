@@ -163,8 +163,8 @@ public class RobotContainer {
         xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
         xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
 
-        xboxController.leftTrigger().whileTrue(intake.runIntake());
-        xboxController.leftTrigger().onFalse(intake.stopIntake());
+        xboxController.leftTrigger().whileTrue(new ParallelCommandGroup(intake.runIntake(), indexer.runIndexer()));
+        xboxController.leftTrigger().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
         xboxController.povDown().onTrue(turret.aimTurret());
         xboxController.povRight().onTrue(shooter.runShooter());
