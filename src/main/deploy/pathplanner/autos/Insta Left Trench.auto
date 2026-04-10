@@ -5,35 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "RightBump1"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "RunIntake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "LT_Backup_3"
           }
         },
         {
@@ -43,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "RightBump2"
+                  "pathName": "LT_Bump_3"
                 }
               },
               {
@@ -59,62 +33,6 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "StopIntake"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AimTurret"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "RunShooter"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopShooter"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "RightBump1"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 2.0
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
                         "name": "RunIntake"
                       }
                     }
@@ -125,15 +43,59 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "RightBump3"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "LT_Return"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.75
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "StopIntake"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "AimTurret"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "RunShooter"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Bump Autos",
+  "folder": "Ned's New Autos",
   "choreoAuto": false
 }

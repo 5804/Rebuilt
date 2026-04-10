@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LT_Backup_1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimTurret"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunShooter"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Ned's New Autos",
+  "choreoAuto": false
+}

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
 
@@ -19,7 +20,7 @@ public class Indexer extends SubsystemBase {
   public double defaultSupplyLimit = 30;
   public double previousSupplyLimit = -1;
   public TalonFXConfiguration indexerMotorConfig;
-  public TalonFXConfiguration agitatorMotorConfig;
+  public TalonFXSConfiguration agitatorMotorConfig;
 
 
 
@@ -30,7 +31,7 @@ public class Indexer extends SubsystemBase {
     SmartDashboard.putNumber("IndexerSupplyLimit", defaultSupplyLimit);
 
     agitatorMotor = new TalonFXS(Constants.IndexerConstants.AGITATOR_MOTOR_ID);
-    agitatorMotorConfig = new TalonFXConfiguration();
+    agitatorMotorConfig = new TalonFXSConfiguration();
     // agitatorMotor.getConfigurator().apply(agitatorMotorConfig);
     SmartDashboard.putNumber("AgitatorSupplyLimit", defaultSupplyLimit);
   }
@@ -51,6 +52,13 @@ public class Indexer extends SubsystemBase {
         indexerMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(indexerSupplyLimit).withSupplyCurrentLimitEnable(true));
         indexerMotor.getConfigurator().apply(indexerMotorConfig);
         previousSupplyLimit = indexerSupplyLimit;
+    }
+
+    double agitatorSupplyLimit = SmartDashboard.getNumber("AgitatorSupplyLimit", defaultSupplyLimit) > 20 ? SmartDashboard.getNumber("AgitatorSupplyLimit", defaultSupplyLimit) : 20; // The elevator motors will not stop if the current limit is set to 0
+    if (previousSupplyLimit != agitatorSupplyLimit) {
+        agitatorMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(agitatorSupplyLimit).withSupplyCurrentLimitEnable(true));
+        agitatorMotor.getConfigurator().apply(agitatorMotorConfig);
+        previousSupplyLimit = agitatorSupplyLimit;
     }
   }
 

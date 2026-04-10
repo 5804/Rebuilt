@@ -5,6 +5,7 @@
   "pathFolders": [
     "Bump Paths",
     "CHCMP Left Paths",
+    "Ned's New Paths",
     "Non Neutral Paths",
     "Testing Paths",
     "VABLA Middle Left Paths",
@@ -12,8 +13,9 @@
     "VABLA Right Paths"
   ],
   "autoFolders": [
-    "CHCMP Left Autos",
     "Bump Autos",
+    "CHCMP Left Autos",
+    "Ned's New Autos",
     "Testing Paths",
     "VABLA Middle Autos",
     "VABLA Right Autos"

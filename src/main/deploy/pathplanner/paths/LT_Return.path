@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.6664063886424145,
+        "y": 4.5218988464951195
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.175483584738243,
+        "y": 5.109396628216504
+      },
+      "isLocked": false,
+      "linkedName": "LT_Bump_2"
+    },
+    {
+      "anchor": {
+        "x": 5.7,
+        "y": 5.6
+      },
+      "prevControl": {
+        "x": 6.754276841171251,
+        "y": 5.543664596273291
+      },
+      "nextControl": {
+        "x": 4.6457231588287495,
+        "y": 5.656335403726708
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.692795031062439,
+        "y": 5.6
+      },
+      "prevControl": {
+        "x": 3.3755102040881715,
+        "y": 5.559600709849157
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9257294429708226,
+      "rotationDegrees": -45.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -45.52838910755959
+  },
+  "reversed": false,
+  "folder": "Ned's New Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}

@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "LB_Backup_1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimTurret"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "RunShooter"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Left Bump Autos",
+  "choreoAuto": false
+}

@@ -114,6 +114,12 @@ public class RobotContainer {
         autoChooser.addOption("TestPath", TestPath());
         autoChooser.addOption("Right Bump", rightBump());
         autoChooser.addOption("Right Bump Return", rightBumpReturn());
+        autoChooser.addOption("Backup Left Trench", backupLeftTrench());
+        autoChooser.addOption("Shoot Left Trench", shootLeftTrench());
+        autoChooser.addOption("Insta Left Trench", instaLeftTrench());
+        autoChooser.addOption("Backup Left Bump", BackupLeftBump());
+        autoChooser.addOption("Shoot Left Bump", shootLeftBump());
+
 
 
         SmartDashboard.putData("Auto choices", autoChooser);
@@ -160,8 +166,11 @@ public class RobotContainer {
         xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
         xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
-        xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
-        xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
+        // xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
+        // xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
+
+        xboxController.rightTrigger().whileTrue(turret.aimTurret().andThen(scoringFactory.runShooter()));
+        xboxController.rightTrigger().onFalse(scoringFactory.stopShooter().andThen(turret.stopAiming()));
 
         xboxController.leftTrigger().whileTrue(new ParallelCommandGroup(intake.runIntake(), indexer.runIndexer()));
         xboxController.leftTrigger().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
@@ -228,10 +237,7 @@ public class RobotContainer {
         xKeys.getButton(24).onFalse(elevator.stopElevator());
 
         xKeys.getButton(25).onTrue(shooter.runShooter());
-        xKeys.getButton(26).onFalse(shooter.stopShooter());
-
-        xKeys.getButton(26).onTrue(scoringFactory.reverseSystem());
-        xKeys.getButton(26).onFalse(scoringFactory.stopShooter());
+        xKeys.getButton(26).onTrue(shooter.stopShooter());
 
         xKeys.getButton(27).onTrue(turret.aimTurret());
         xKeys.getButton(28).onTrue(aimTurretStop().andThen(turret.stopAiming()));
@@ -287,5 +293,25 @@ public class RobotContainer {
     }
     public Command rightBumpReturn() {
         return new PathPlannerAuto("Right Bump Return");
+    }
+    
+    public Command shootLeftBump() {
+        return new PathPlannerAuto("Shoot Left Bump");
+    }
+    
+    public Command backupLeftTrench() {
+        return new PathPlannerAuto("Backup Left Trench");
+    }
+    
+    public Command shootLeftTrench() {
+        return new PathPlannerAuto("Shoot Left Trench");
+    }
+    
+    public Command BackupLeftBump() {
+        return new PathPlannerAuto("Backup Left Bump");
+    }
+    
+    public Command instaLeftTrench() {
+        return new PathPlannerAuto("Insta Left Trench");
     }
 }

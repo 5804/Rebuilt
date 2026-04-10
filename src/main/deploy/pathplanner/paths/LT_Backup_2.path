@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.6,
+        "y": 7.4
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.271747798118351,
+        "y": 5.424981128327602
+      },
+      "isLocked": false,
+      "linkedName": "LT_Backup"
+    },
+    {
+      "anchor": {
+        "x": 3.15,
+        "y": 5.600319432120674
+      },
+      "prevControl": {
+        "x": 3.488866783313485,
+        "y": 7.466855374051147
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "LT_Backup_2"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -45.0
+  },
+  "reversed": false,
+  "folder": "Ned's New Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": false
+}

@@ -46,7 +46,7 @@ public class Turret extends SubsystemBase {
     slot0Configs.kA = 0;
 
     var motionMagicConfigs = talonFXConfigs.MotionMagic;
-    motionMagicConfigs.MotionMagicCruiseVelocity = 100;
+    motionMagicConfigs.MotionMagicCruiseVelocity = 15;
     motionMagicConfigs.MotionMagicAcceleration = 1000;
     motionMagicConfigs.MotionMagicJerk = 10000;
 
