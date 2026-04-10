@@ -128,7 +128,7 @@ public class ScoringFactory extends SubsystemBase {
           // elevator.elevatorMotor.set(-rps / 400);
         } else {
           indexer.indexerMotor.set(rps / 150);
-          indexer.agitatorMotor.set(-rps / 50);
+          indexer.agitatorMotor.set(-rps / 100);
           // elevator.elevatorMotor.set(-rps / 50);
         }
 
@@ -146,6 +146,7 @@ public class ScoringFactory extends SubsystemBase {
       reachedSpeed = false;
       isReversing = false;
       isShooting = true;
+      indexer.scoring = true;
     }, shooter, elevator, indexer);
   }
 
@@ -154,6 +155,7 @@ public class ScoringFactory extends SubsystemBase {
       reachedSpeed = false;
       isReversing = true;
       isShooting = false;
+      indexer.scoring = true;
     }, shooter, elevator, indexer);
   }
 
@@ -164,6 +166,7 @@ public class ScoringFactory extends SubsystemBase {
       elevatorUnjamming = false;
       indexerUnjamming = false;
       isShooting = false;
+      indexer.scoring = false;
       isReversing = false;
       shooter.leftShooterMotor.set(0);
       elevator.elevatorMotor.set(0);

@@ -17,6 +17,7 @@ public class Indexer extends SubsystemBase {
   public TalonFXS agitatorMotor;
   public boolean isRunning = false;
   public boolean isReversing = false;
+  public boolean scoring = false;
   public double defaultSupplyLimit = 30;
   public double previousSupplyLimit = -1;
   public TalonFXConfiguration indexerMotorConfig;
@@ -38,11 +39,11 @@ public class Indexer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (isRunning) {
+    if (isRunning && !scoring) {
       indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
       agitatorMotor.set(-Constants.IndexerConstants.AGITATOR_SPEED);
     }
-    else if (isReversing) {
+    else if (isReversing && !scoring) {
       indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
       agitatorMotor.set(Constants.IndexerConstants.AGITATOR_SPEED);
     }

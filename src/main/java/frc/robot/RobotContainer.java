@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -79,8 +80,8 @@ public class RobotContainer {
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
-    public Climber climber = new Climber(() -> { return -1 *
-    xKeys.getAxis(2) * climbTriggerHeld; });
+    // public Climber climber = new Climber(() -> { return -1 *
+    // xKeys.getAxis(2) * climbTriggerHeld; });
 
     ScoringFactory scoringFactory = new ScoringFactory(shooter, elevator, indexer, drivetrain, isRedAlliance,
             turretMath);
@@ -96,6 +97,7 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureBindings();
+        RobotController.setBrownoutVoltage(6.2);
         NamedCommands.registerCommand("AimTurret", turret.aimTurret());
         NamedCommands.registerCommand("StopAimTurret", turret.stopAiming());
         NamedCommands.registerCommand("RunShooter", shooter.runShooter().andThen(scoringFactory.runShooter()));
@@ -236,8 +238,11 @@ public class RobotContainer {
         xKeys.getButton(24).onTrue(elevator.runElevator(Constants.ElevatorConstants.ELEVATOR_SPEED));
         xKeys.getButton(24).onFalse(elevator.stopElevator());
 
-        xKeys.getButton(25).onTrue(shooter.runShooter());
-        xKeys.getButton(26).onTrue(shooter.stopShooter());
+        // xKeys.getButton(25).whileTrue(turret.aimTurret().andThen(scoringFactory.runShooter()));
+        // xKeys.getButton(25).onFalse(scoringFactory.stopShooter().andThen(turret.stopAiming()));
+
+        // xKeys.getButton(26).whileTrue(shooter.runShooter());
+        // xKeys.getButton(26).onFalse(shooter.stopShooter());
 
         xKeys.getButton(27).onTrue(turret.aimTurret());
         xKeys.getButton(28).onTrue(aimTurretStop().andThen(turret.stopAiming()));
@@ -245,20 +250,20 @@ public class RobotContainer {
         xKeys.getButton(29).onTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer()));
         xKeys.getButton(29).onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
-        xKeys.getButton(30).onTrue(intake.reverseIntake().andThen(scoringFactory.reverseSystem()));
-        xKeys.getButton(30).onFalse(intake.stopIntake().andThen(scoringFactory.stopShooter()));
+        xKeys.getButton(30).onTrue(turret.aimTurret().andThen(scoringFactory.runShooter()));
+        xKeys.getButton(30).onFalse(scoringFactory.stopShooter().andThen(turret.stopAiming()));
 
         xKeys.getButton(31).onTrue(new InstantCommand(() -> { CommandScheduler.getInstance().cancelAll(); }));
 
         
         // Climber
-        climber.setDefaultCommand(climber.setClimberSpeed());
+        // climber.setDefaultCommand(climber.setClimberSpeed());
         
-        xKeys.getButton(19).whileTrue(new InstantCommand(() -> { climbTriggerHeld = 1; }));
-        xKeys.getButton(19).whileFalse(new InstantCommand(() -> { climbTriggerHeld = 0; }));
+        // xKeys.getButton(19).whileTrue(new InstantCommand(() -> { climbTriggerHeld = 1; }));
+        // xKeys.getButton(19).whileFalse(new InstantCommand(() -> { climbTriggerHeld = 0; }));
 
-        xKeys.getButton(20).whileTrue(climber.extendActuator());
-        xKeys.getButton(21).whileTrue(climber.retractActuator());
+        // xKeys.getButton(20).whileTrue(climber.extendActuator());
+        // xKeys.getButton(21).whileTrue(climber.retractActuator());
          
 
         drivetrain.registerTelemetry(logger::telemeterize);
