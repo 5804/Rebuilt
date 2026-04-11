@@ -121,6 +121,7 @@ public class RobotContainer {
         autoChooser.addOption("Insta Left Trench", instaLeftTrench());
         autoChooser.addOption("Backup Left Bump", BackupLeftBump());
         autoChooser.addOption("Shoot Left Bump", shootLeftBump());
+        autoChooser.addOption("Quick Auto", quickAuto());
 
 
 
@@ -304,6 +305,10 @@ public class RobotContainer {
         return new PathPlannerAuto("Shoot Left Bump");
     }
     
+    public Command quickAuto() {
+        return new PathPlannerAuto("Quick Auto");
+    }
+
     public Command backupLeftTrench() {
         return new PathPlannerAuto("Backup Left Trench");
     }
