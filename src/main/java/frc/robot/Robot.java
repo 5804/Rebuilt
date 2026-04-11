@@ -9,18 +9,23 @@ import com.ctre.phoenix6.HootAutoReplay;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
+    // private final LED m_led;
 
     /* log and replay timestamp and joystick data */
     private final HootAutoReplay m_timeAndJoystickReplay = new HootAutoReplay()
         .withTimestampReplay()
         .withJoystickReplay();
 
-    public Robot() { m_robotContainer = new RobotContainer(); }
+    public Robot() { 
+        m_robotContainer = new RobotContainer(); 
+        // m_led = new LED();
+    }
 
     @Override
     public void robotPeriodic() {
@@ -29,13 +34,22 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        // LED.isClimbing = false;
+        // m_led.fire();
+    }
 
     @Override
     public void disabledPeriodic() {}
 
     @Override
-    public void disabledExit() {}
+    public void disabledExit() {
+        // if (Constants.LEDConstants.IS_TESTING) {
+        //     m_led.changeLED(LED.currentSimulatedHubShift);
+        // } else {
+        //     m_led.changeLED(HubTracker.getCurrentShift().get());
+        // }
+    }
 
     @Override
     public void autonomousInit() {

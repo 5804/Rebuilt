@@ -15,15 +15,15 @@ import frc.robot.Constants;
 public class Indexer extends SubsystemBase {
   public TalonFX indexerMotor;
   public TalonFXS agitatorMotor;
-  public boolean isRunning = false;
-  public boolean isReversing = false;
+  public boolean isBottomRunning = false;
+  public boolean isBottomReversing = false;
+  public boolean isTopRunning = false;
+  public boolean isTopReversing = false;
   public boolean scoring = false;
   public double defaultSupplyLimit = 30;
   public double previousSupplyLimit = -1;
   public TalonFXConfiguration indexerMotorConfig;
   public TalonFXSConfiguration agitatorMotorConfig;
-
-
 
   public Indexer() {
     indexerMotor = new TalonFX(Constants.IndexerConstants.INDEXER_MOTOR_ID);
@@ -39,32 +39,74 @@ public class Indexer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (isRunning && !scoring) {
+    if (isBottomRunning && !scoring) {
       indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
-      agitatorMotor.set(-Constants.IndexerConstants.AGITATOR_SPEED);
-    }
-    else if (isReversing && !scoring) {
+    } else if (isBottomReversing && !scoring) {
       indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
+    }
+    if (isTopRunning && !scoring) {
+      agitatorMotor.set(-Constants.IndexerConstants.AGITATOR_SPEED);
+    } else if (isTopReversing && !scoring) {
       agitatorMotor.set(Constants.IndexerConstants.AGITATOR_SPEED);
     }
 
-    double indexerSupplyLimit = SmartDashboard.getNumber("IndexerSupplyLimit", defaultSupplyLimit) > 20 ? SmartDashboard.getNumber("IndexerSupplyLimit", defaultSupplyLimit) : 20; // The elevator motors will not stop if the current limit is set to 0
+    double indexerSupplyLimit = SmartDashboard.getNumber("IndexerSupplyLimit", defaultSupplyLimit) > 20
+        ? SmartDashboard.getNumber("IndexerSupplyLimit", defaultSupplyLimit)
+        : 20; // The elevator motors will not stop if the current limit is set to 0
     if (previousSupplyLimit != indexerSupplyLimit) {
-        indexerMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(indexerSupplyLimit).withSupplyCurrentLimitEnable(true));
-        indexerMotor.getConfigurator().apply(indexerMotorConfig);
-        previousSupplyLimit = indexerSupplyLimit;
+      indexerMotorConfig.withCurrentLimits(
+          new CurrentLimitsConfigs().withSupplyCurrentLimit(indexerSupplyLimit).withSupplyCurrentLimitEnable(true));
+      indexerMotor.getConfigurator().apply(indexerMotorConfig);
+      previousSupplyLimit = indexerSupplyLimit;
     }
 
-    double agitatorSupplyLimit = SmartDashboard.getNumber("AgitatorSupplyLimit", defaultSupplyLimit) > 20 ? SmartDashboard.getNumber("AgitatorSupplyLimit", defaultSupplyLimit) : 20; // The elevator motors will not stop if the current limit is set to 0
+    double agitatorSupplyLimit = SmartDashboard.getNumber("AgitatorSupplyLimit", defaultSupplyLimit) > 20
+        ? SmartDashboard.getNumber("AgitatorSupplyLimit", defaultSupplyLimit)
+        : 20; // The elevator motors will not stop if the current limit is set to 0
     if (previousSupplyLimit != agitatorSupplyLimit) {
-        agitatorMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(agitatorSupplyLimit).withSupplyCurrentLimitEnable(true));
-        agitatorMotor.getConfigurator().apply(agitatorMotorConfig);
-        previousSupplyLimit = agitatorSupplyLimit;
+      agitatorMotorConfig.withCurrentLimits(
+          new CurrentLimitsConfigs().withSupplyCurrentLimit(agitatorSupplyLimit).withSupplyCurrentLimitEnable(true));
+      agitatorMotor.getConfigurator().apply(agitatorMotorConfig);
+      previousSupplyLimit = agitatorSupplyLimit;
     }
   }
 
-  public Command runIndexer() { return Commands.runOnce(() -> { isRunning = true; isReversing = false; }, this); }
-  public Command reverseIndexer() { return Commands.runOnce(() -> { isReversing = true; isRunning = false; }, this); }
-  public Command stopIndexer() { return Commands.runOnce(() -> { isRunning = false; isReversing = false; indexerMotor.set(0); agitatorMotor.set(0); }, this); }
+  public Command runIndexer() {
+    return Commands.runOnce(() -> {
+      isBottomRunning = true;
+      isBottomReversing = false;
+      isTopRunning = true;
+      isTopReversing = false;
+    }, this);
+  }
+
+  public Command intakeIndexer() {
+    return Commands.runOnce(() -> {
+      isBottomRunning = true;
+      isBottomReversing = false;
+      isTopRunning = false;
+      isTopReversing = true;
+    }, this);
+  }
+
+  public Command reverseIndexer() {
+    return Commands.runOnce(() -> {
+      isBottomReversing = true;
+      isBottomRunning = false;
+      isTopReversing = true;
+      isTopRunning = false;
+    }, this);
+  }
+
+  public Command stopIndexer() {
+    return Commands.runOnce(() -> {
+      isTopReversing = false;
+      isTopRunning = false;
+      isBottomRunning = false;
+      isBottomReversing = false;
+      indexerMotor.set(0);
+      agitatorMotor.set(0);
+    }, this);
+  }
 
 }

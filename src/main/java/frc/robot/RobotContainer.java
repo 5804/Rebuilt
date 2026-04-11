@@ -34,6 +34,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Turret;
 
@@ -49,7 +50,7 @@ public class RobotContainer {
 
     public boolean turretAutoLock = false;
 
-    static Optional<Alliance> alliance = DriverStation.getAlliance();
+    public static Optional<Alliance> alliance = DriverStation.getAlliance();
     public static boolean isRedAlliance = alliance.get() == Alliance.Red;
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -80,6 +81,7 @@ public class RobotContainer {
     public final Indexer indexer = new Indexer();
     public final Shooter shooter = new Shooter();
     public final Intake intake = new Intake();
+    //public final LED led = new LED();
     // public Climber climber = new Climber(() -> { return -1 *
     // xKeys.getAxis(2) * climbTriggerHeld; });
 
@@ -175,12 +177,15 @@ public class RobotContainer {
         xboxController.rightTrigger().whileTrue(turret.aimTurret().andThen(scoringFactory.runShooter()));
         xboxController.rightTrigger().onFalse(scoringFactory.stopShooter().andThen(turret.stopAiming()));
 
-        xboxController.leftTrigger().whileTrue(new ParallelCommandGroup(intake.runIntake(), indexer.runIndexer()));
+        xboxController.leftTrigger().whileTrue(new ParallelCommandGroup(intake.runIntake(), indexer.intakeIndexer()));
         xboxController.leftTrigger().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer()));
 
         xboxController.povDown().onTrue(turret.aimTurret());
         xboxController.povRight().onTrue(shooter.runShooter());
         xboxController.povLeft().onTrue(shooter.stopShooter());
+
+        //xboxController.a().onTrue(Commands.runOnce(() -> led.cycleHubShift()));
+
 
         /*
          * // Testing Commands

@@ -47,6 +47,15 @@ public final class Constants {
         public static final double climberOffsetMagnitudeX = .1;
         public static final double climberOffsetMagnitudeY = .1;
     }
+    public final class LEDConstants {
+        public static final int LEFT_CANDLE_ID = 61;
+        public static final int RIGHT_CANDLE_ID = 62;
+        public static final int CANDLE_NUM_LEDS = 8;
+        public static final int STRIP_NUM_LEDS = 58;
+        public static final double NORMAL_BLINKING_FREQUENCY = 2.5;
+
+        public static final boolean IS_TESTING = false;
+    }
     public final class GlobalConstants {
         public static final double PlaceholderRadianVal = Math.toRadians(9999999);
     }
