@@ -20,7 +20,7 @@ public class Indexer extends SubsystemBase {
   public boolean isTopRunning = false;
   public boolean isTopReversing = false;
   public boolean scoring = false;
-  public double defaultSupplyLimit = 30;
+  public double defaultSupplyLimit = 25;
   public double previousSupplyLimit = -1;
   public TalonFXConfiguration indexerMotorConfig;
   public TalonFXSConfiguration agitatorMotorConfig;
@@ -50,12 +50,14 @@ public class Indexer extends SubsystemBase {
       agitatorMotor.set(Constants.IndexerConstants.AGITATOR_SPEED);
     }
 
-    double indexerSupplyLimit = SmartDashboard.getNumber("IndexerSupplyLimit", defaultSupplyLimit) > 20
+    double indexerSupplyLimit = SmartDashboard.getNumber("IndexerSupplyLimit", defaultSupplyLimit) > 10
         ? SmartDashboard.getNumber("IndexerSupplyLimit", defaultSupplyLimit)
-        : 20; // The elevator motors will not stop if the current limit is set to 0
+        : 10; // The elevator motors will not stop if the current limit is set to 0
     if (previousSupplyLimit != indexerSupplyLimit) {
       indexerMotorConfig.withCurrentLimits(
-          new CurrentLimitsConfigs().withSupplyCurrentLimit(indexerSupplyLimit).withSupplyCurrentLimitEnable(true));
+          new CurrentLimitsConfigs().withSupplyCurrentLimit(indexerSupplyLimit).withSupplyCurrentLimitEnable(true)
+          .withSupplyCurrentLowerLimit(indexerSupplyLimit / 2)
+          .withSupplyCurrentLowerTime(0.25));
       indexerMotor.getConfigurator().apply(indexerMotorConfig);
       previousSupplyLimit = indexerSupplyLimit;
     }

@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -16,6 +19,10 @@ public class Shooter extends SubsystemBase {
   public TalonFX leftShooterMotor;
   public boolean isRunning = false;
   public boolean isReversing = false;
+  public TalonFXConfiguration leftShooterMotorConfig;
+  public TalonFXConfiguration rightShooterMotorConfig;
+  public double defaultSupplyLimit = 40;
+  public double previousSupplyLimit = -1;
 
   private final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
 
@@ -25,8 +32,8 @@ public class Shooter extends SubsystemBase {
 
     rightShooterMotor.setControl(new Follower(Constants.ShooterConstants.LEFT_SHOOTER_MOTOR_ID, MotorAlignmentValue.Opposed));
 
-    var rightShooterMotorConfig = new TalonFXConfiguration();
-    var leftShooterMotorConfig = new TalonFXConfiguration();
+    rightShooterMotorConfig = new TalonFXConfiguration();
+    leftShooterMotorConfig = new TalonFXConfiguration();
 
     var leftShooterMotorSlot0Configs = leftShooterMotorConfig.Slot0;
     leftShooterMotorSlot0Configs.kS = 0;
@@ -39,6 +46,7 @@ public class Shooter extends SubsystemBase {
 
     rightShooterMotor.getConfigurator().apply(rightShooterMotorConfig);
     leftShooterMotor.getConfigurator().apply(leftShooterMotorConfig);
+    SmartDashboard.putNumber("ShooterSupplyLimit", defaultSupplyLimit);
   }
 
   @Override
@@ -47,6 +55,18 @@ public class Shooter extends SubsystemBase {
       leftShooterMotor.setControl(velocityRequest.withVelocity(TurretMath.turretRPS).withFeedForward(.5));
     } else if (isReversing) {
       leftShooterMotor.setControl(velocityRequest.withVelocity(-TurretMath.turretRPS).withFeedForward(.5));
+    }
+    double shooterSupplyLimit = SmartDashboard.getNumber("ShooterSupplyLimit", defaultSupplyLimit); // The Shooter motors will not stop if the current limit is set to 0
+    if (previousSupplyLimit != shooterSupplyLimit) {
+        leftShooterMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(shooterSupplyLimit).withSupplyCurrentLimitEnable(true)
+        .withSupplyCurrentLowerLimit(shooterSupplyLimit / 2)
+        .withSupplyCurrentLowerTime(0.25));
+        rightShooterMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(shooterSupplyLimit).withSupplyCurrentLimitEnable(true)
+        .withSupplyCurrentLowerLimit(shooterSupplyLimit / 2)
+        .withSupplyCurrentLowerTime(0.25));
+        leftShooterMotor.getConfigurator().apply(leftShooterMotorConfig);
+        rightShooterMotor.getConfigurator().apply(rightShooterMotorConfig);
+        previousSupplyLimit = shooterSupplyLimit;
     }
   }
 

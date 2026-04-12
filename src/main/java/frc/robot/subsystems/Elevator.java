@@ -34,7 +34,9 @@ public class Elevator extends SubsystemBase {
     else if (isReversing) elevatorMotor.set(-speed);
     double elevatorSupplyLimit = SmartDashboard.getNumber("ElevatorSupplyLimit", defaultSupplyLimit); // The elevator motors will not stop if the current limit is set to 0
     if (previousSupplyLimit != elevatorSupplyLimit) {
-        elevatorMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(elevatorSupplyLimit).withSupplyCurrentLimitEnable(true));
+        elevatorMotorConfig.withCurrentLimits(new CurrentLimitsConfigs().withSupplyCurrentLimit(elevatorSupplyLimit).withSupplyCurrentLimitEnable(true)
+        .withSupplyCurrentLowerLimit(elevatorSupplyLimit / 2)
+        .withSupplyCurrentLowerTime(0.25));
         elevatorMotor.getConfigurator().apply(elevatorMotorConfig);
         previousSupplyLimit = elevatorSupplyLimit;
     }
