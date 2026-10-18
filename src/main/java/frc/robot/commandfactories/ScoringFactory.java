@@ -44,7 +44,7 @@ public class ScoringFactory extends SubsystemBase {
     if (isShooting) {
       double rps = TurretMath.turretRPS;
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
-      // shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
+      shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
 
       if (reachedSpeed || shooter.leftShooterMotor.getVelocity().getValueAsDouble() > rps - (rps * 0.03)) {
         reachedSpeed = true;
@@ -76,12 +76,12 @@ public class ScoringFactory extends SubsystemBase {
         }
 
         if (indexerUnjamming) {
-          indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
+          indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED); // NEED TO REPLACE WITH indexer.reverseIndexer(); but doesn't work
           if (indexerVel >= targetIndexerRps * 0.95) {
             indexerUnjamming = false;
           }
         } else {
-          indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);
+          indexer.indexerMotor.set(Constants.IndexerConstants.INDEXER_SPEED);  // NEED TO REPLACE WITH indexer.runIndexer(); but doesn't work
           if (indexerVel < targetIndexerRps * 0.30) {
             indexerUnjamming = true;
           }
@@ -92,7 +92,7 @@ public class ScoringFactory extends SubsystemBase {
       SmartDashboard.putNumber("Shooter Velocity (RPS)", rps);
       // shooter.leftShooterMotor.setControl(m_request.withVelocity(rps).withFeedForward(.5));
       elevator.elevatorMotor.set(-rps / 100);
-      indexer.indexerMotor.set(-Constants.IndexerConstants.INDEXER_SPEED);
+      indexer.reverseIndexer();
     }
   }
 

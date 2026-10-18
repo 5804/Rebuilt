@@ -62,7 +62,7 @@ public class RobotContainer {
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
     private final CommandXboxController xboxController = new CommandXboxController(0);
-    private final ButtonBoard xKeys = new ButtonBoard(21, 1);
+    private final ButtonBoard xKeys = new ButtonBoard(31, 1);
     // private final Joystick joystick = new Joystick(2);
     
     public int climbTriggerHeld = 0;
@@ -143,6 +143,9 @@ public class RobotContainer {
         xboxController.b().whileTrue(new ParallelCommandGroup(intake.reverseIntake(), indexer.reverseIndexer(), elevator.reverseElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
         xboxController.b().onFalse(new ParallelCommandGroup(intake.stopIntake(), indexer.stopIndexer(), elevator.stopElevator()));
 
+        xboxController.y().whileTrue(new ParallelCommandGroup(indexer.runIndexer(), elevator.runElevator(Constants.ElevatorConstants.ELEVATOR_SPEED)));
+        xboxController.y().onFalse(new ParallelCommandGroup(indexer.stopIndexer(), elevator.stopElevator()));
+
         xboxController.rightTrigger().whileTrue(scoringFactory.runShooter());
         xboxController.rightTrigger().onFalse(scoringFactory.stopShooter());
 
@@ -152,9 +155,10 @@ public class RobotContainer {
         xboxController.povDown().onTrue(turret.aimTurret());
         xboxController.povRight().onTrue(shooter.runShooter());
         xboxController.povLeft().onTrue(shooter.stopShooter());
+        xboxController.povUp().onTrue(aimTurretStop().andThen(turret.stopAiming()));
 
-        xboxController.y().onTrue(new InstantCommand(() -> { TurretMath.blueZones[0][0] += .25;  TurretMath.redZones[0][0] += .25; }));
-        xboxController.x().onTrue(new InstantCommand(() -> { TurretMath.blueZones[0][0] -= .25;  TurretMath.redZones[0][0] -= .25; }));
+        // xboxController.y().onTrue(new InstantCommand(() -> { TurretMath.blueZones[0][0] += .25;  TurretMath.redZones[0][0] += .25; }));
+        // xboxController.x().onTrue(new InstantCommand(() -> { TurretMath.blueZones[0][0] -= .25;  TurretMath.redZones[0][0] -= .25; }));
 
         /* // Testing Commands
         xboxController.y().onTrue(new InstantCommand(() -> { Constants.ShooterConstants.SHOOTER_SPEED += .25 ;}));
@@ -186,8 +190,8 @@ public class RobotContainer {
         xKeys.getButton(16).onTrue(scoringFactory.reverseSystem());
         xKeys.getButton(16).onFalse(scoringFactory.stopShooter());
 
-        xKeys.getButton(9).onTrue(elevator.ElevatorVLimitUp());
-        xKeys.getButton(4).onTrue(elevator.ElevatorVLimitDown());
+        // xKeys.getButton(9).onTrue(elevator.ElevatorVLimitUp());
+        // xKeys.getButton(4).onTrue(elevator.ElevatorVLimitDown());
 
         /* // Trigger + Climber
         climber.setDefaultCommand(climber.setClimberSpeed());
