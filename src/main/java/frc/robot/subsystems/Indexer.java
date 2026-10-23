@@ -2,8 +2,10 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXSConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.TalonFXS;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,7 +21,7 @@ public class Indexer extends SubsystemBase {
   public double defaultSupplyLimit = 30;
   public double previousSupplyLimit = -1;
   public TalonFXConfiguration indexerMotorConfig;
-  public TalonFXConfiguration agitatorMotorConfig;
+  public TalonFXSConfiguration agitatorMotorConfig;
 
 
 
@@ -30,8 +32,10 @@ public class Indexer extends SubsystemBase {
     SmartDashboard.putNumber("IndexerSupplyLimit", defaultSupplyLimit);
 
     agitatorMotor = new TalonFXS(Constants.IndexerConstants.AGITATOR_MOTOR_ID);
-    agitatorMotorConfig = new TalonFXConfiguration();
-    // agitatorMotor.getConfigurator().apply(agitatorMotorConfig);
+    agitatorMotorConfig = new TalonFXSConfiguration();
+    agitatorMotorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+    agitatorMotor.getConfigurator().apply(agitatorMotorConfig);
     SmartDashboard.putNumber("AgitatorSupplyLimit", defaultSupplyLimit);
   }
 

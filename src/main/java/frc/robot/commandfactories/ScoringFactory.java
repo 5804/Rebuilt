@@ -90,6 +90,7 @@ public class ScoringFactory extends SubsystemBase {
 
         //UNJAMMING CODE
         // Are we unjamming the indexer?
+        SmartDashboard.putBoolean("Indexer Unjamming", indexerUnjamming);
         if (indexerUnjamming) {
           // Has it done a the correct # of rotation?
           if (Math.abs(indPosInit - indexer.indexerMotor.getPosition().getValueAsDouble()) >= unjamRot) {
@@ -104,6 +105,7 @@ public class ScoringFactory extends SubsystemBase {
           }
         }
 
+        SmartDashboard.putBoolean("Agitator Unjamming", agitatorUnjamming);
         // Are we unjamming the agitator?
         if (agitatorUnjamming) {
           // Has it done a the correct # of rotation?
