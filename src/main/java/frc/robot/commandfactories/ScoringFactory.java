@@ -167,7 +167,7 @@ public class ScoringFactory extends SubsystemBase {
       indexerUnjamming = false;
       isShooting = false;
       isReversing = false;
-      shooter.leftShooterMotor.set(0);
+      // shooter.leftShooterMotor.set(0);
       elevator.elevatorMotor.set(0);
       indexer.indexerMotor.set(0);
       indexer.agitatorMotor.set(0);
